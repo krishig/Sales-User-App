@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/manageProductRelativeLayout"
+    android:background="@color/colorBackground"
+    tools:context=".ui.home.fragments.manageProduct.view.ManageProductFragment">
+
+    <RelativeLayout
+        android:id="@+id/searchRelativeLayoutProduct"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/searchBarShadowCardViewProduct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginBottom="@dimen/_12sdp"
+            android:layout_toStartOf="@+id/filterImageView"
+            app:cardCornerRadius="@dimen/_6sdp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/white"
+            app:strokeColor="@color/home_item_grey"
+            app:strokeWidth="1dp">
+
+            <RelativeLayout
+                android:id="@+id/searchBarRelativeLayoutProduct"
+                android:layout_width="wrap_content"
+                android:background="@color/white"
+                android:layout_height="@dimen/_42sdp"
+                android:padding="@dimen/_5sdp">
+
+                <ImageView
+                    android:id="@+id/searchImageViewProduct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_search" />
+
+                <EditText
+                    android:id="@+id/productEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_5sdp"
+                    android:layout_toEndOf="@+id/searchImageViewProduct"
+                    android:autofillHints="false"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:hint="@string/search_product"
+                    android:includeFontPadding="false"
+                    android:inputType="text"
+                    android:lineSpacingExtra="0dp"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/_5sdp"
+                    android:paddingTop="@dimen/_5sdp"
+                    android:paddingEnd="@dimen/_5sdp"
+                    android:paddingBottom="@dimen/_5sdp"
+                    android:singleLine="true"
+                    android:textAppearance="@style/MediumFont14"
+                    android:textColor="@color/home_grey"
+                    android:textColorHint="@color/home_grey" />
+
+
+            </RelativeLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <ImageView
+            android:id="@+id/filterImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:padding="@dimen/_5sdp"
+            android:src="@drawable/ic_filter" />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_below="@+id/searchRelativeLayoutProduct"
+        android:orientation="vertical">
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/selectCategoryTextInputLayout"
+            style="@style/DropDownInputField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="0dp"
+            android:textColorHint="@color/colorHeadingTextView"
+            app:endIconTint="@color/colorHeadingTextView"
+            app:errorEnabled="false"
+            app:startIconTint="@color/select_category_color"
+            app:errorIconDrawable="@null"
+            app:startIconDrawable="@drawable/ic_select_category">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/selectCategoryAppCompatAutoCompleteTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:cursorVisible="false"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:hint="@string/select_category"
+                android:importantForAutofill="no"
+                android:includeFontPadding="false"
+                android:inputType="none"
+                android:lineSpacingExtra="0dp"
+                android:textAppearance="@style/MediumFont12"
+                android:textColor="@color/colorHeadingTextView" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/selectBrandTextInputLayout"
+            style="@style/DropDownInputField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="0dp"
+            android:textColorHint="@color/colorHeadingTextView"
+            app:endIconTint="@color/colorHeadingTextView"
+            app:errorEnabled="false"
+            app:startIconTint="@color/select_category_color"
+            app:errorIconDrawable="@null"
+            app:startIconDrawable="@drawable/ic_select_category">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/selectBrandAppCompatAutoCompleteTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:cursorVisible="false"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:hint="@string/select_brand"
+                android:importantForAutofill="no"
+                android:includeFontPadding="false"
+                android:inputType="none"
+                android:lineSpacingExtra="0dp"
+                android:textAppearance="@style/MediumFont12"
+                android:textColor="@color/colorHeadingTextView" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/selectSubCategoryTextInputLayout"
+            style="@style/DropDownInputField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="0dp"
+            android:textColorHint="@color/colorHeadingTextView"
+            app:endIconTint="@color/colorHeadingTextView"
+            app:errorEnabled="false"
+            app:errorIconDrawable="@null"
+            app:startIconTint="@color/select_category_color"
+            app:startIconDrawable="@drawable/ic_select_category">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/selectSubCategoryAppCompatAutoCompleteTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:cursorVisible="false"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:hint="@string/select_sub_category"
+                android:importantForAutofill="no"
+                android:includeFontPadding="false"
+                android:inputType="none"
+                android:lineSpacingExtra="0dp"
+                android:textAppearance="@style/MediumFont12"
+                android:textColor="@color/colorHeadingTextView" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/clearTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginHorizontal="@dimen/_7sdp"
+            android:letterSpacing="0"
+            android:padding="@dimen/_5sdp"
+            android:text="@string/clear"
+            android:textAppearance="@style/BoldFont14"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linear">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:background="@color/white"
+                android:overScrollMode="never"
+                android:paddingTop="@dimen/_12sdp" />
+
+            <ProgressBar
+                android:id="@+id/idPBLoading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/errorImageView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_220sdp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/error_image"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/errorTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/errorImageView"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="0dp"
+                android:text="@string/no_data_found"
+                android:textAppearance="@style/BoldFont12"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/errorImageView" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+
+
+    <include
+        android:id="@+id/progressDialog"
+        layout="@layout/please_wait_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+</RelativeLayout>

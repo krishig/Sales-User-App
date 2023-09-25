@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.krishig.android.ui.home.fragments.home.view.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home" />
+
+
+    <fragment
+        android:id="@+id/nav_first_fragment"
+        android:name="com.krishig.android.ui.home.fragments.home.fragments.FirstFragment"
+        android:label="Seeds"
+        tools:layout="@layout/fragment_first" />
+    <fragment
+        android:id="@+id/nav_second_fragment"
+        android:name="com.krishig.android.ui.home.fragments.home.fragments.SecondFragment"
+        android:label="Fertiliser"
+        tools:layout="@layout/fragment_second" />
+    <fragment
+        android:id="@+id/nav_add_to_bag"
+        android:name="com.krishig.android.ui.addToBag.view.AddToFragment"
+        android:label="Add To Bag"
+        tools:layout="@layout/fragment_add_to" />
+
+    <fragment
+        android:id="@+id/navigation_manage_product"
+        android:name="com.krishig.android.ui.home.fragments.manageProduct.view.ManageProductFragment"
+        android:label="Manage Product"
+        tools:layout="@layout/fragment_manage_product" />
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.krishig.android.ui.home.fragments.manageProfile.ManageProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_manage_setting" />
+    <fragment
+        android:id="@+id/nav_manage_orders"
+        android:name="com.krishig.android.ui.home.fragments.manageOrders.view.ManageOrdersFragment"
+        android:label="Orders"
+        tools:layout="@layout/fragment_manage_orders" />
+
+</navigation>

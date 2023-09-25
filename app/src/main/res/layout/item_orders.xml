@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/addMaterialCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        app:cardBackgroundColor="@color/seed_card_color"
+        app:cardCornerRadius="@dimen/_10sdp"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/home_grey"
+        app:strokeWidth="0.5dp"
+        >
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:paddingHorizontal="@dimen/_5sdp"
+            android:paddingBottom="@dimen/_5sdp"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/categoryImageView"
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="@dimen/_60sdp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:scaleType="fitXY"
+                android:src="@drawable/seed" />
+
+            <TextView
+                android:id="@+id/categoryTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/categoryImageView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:letterSpacing="0"
+                android:text="@string/sign_up"
+                android:textAppearance="@style/BoldFont14"
+                android:textColor="@color/black" />
+
+
+            <TextView
+                android:id="@+id/categoryPriceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/categoryTextView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="@dimen/_2sdp"
+                android:layout_marginEnd="@dimen/_2sdp"
+                android:letterSpacing="0"
+                android:text="400"
+                android:textAppearance="@style/BoldFont14"
+                android:textColor="@color/red" />
+
+            <TextView
+                android:id="@+id/statusTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/categoryPriceTextView"
+                android:layout_marginStart="@dimen/_2sdp"
+                android:layout_centerHorizontal="true"
+                android:letterSpacing="0"
+                android:text=""
+                android:textAppearance="@style/BoldFont12"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+</RelativeLayout>

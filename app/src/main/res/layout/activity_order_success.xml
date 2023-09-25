@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:orientation="vertical"
+    tools:context=".ui.OrderSuccess.OrderSuccessActivity">
+
+
+    <ImageView
+        android:id="@+id/icBackImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_12sdp"
+        android:contentDescription="@string/image"
+        android:src="@drawable/ic_back" />
+
+
+        <ImageView
+            android:id="@+id/orderImageView"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/icBackImageView"
+            android:layout_height="@dimen/_120sdp"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_50sdp"
+            android:layout_marginEnd="@dimen/_12sdp"
+            android:layout_marginBottom="@dimen/_12sdp"
+            android:contentDescription="@string/image"
+            android:src="@drawable/image_cart" />
+
+    <TextView
+        android:id="@+id/paymentMethodTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:gravity="center"
+        android:letterSpacing="0"
+        android:layout_below="@+id/orderImageView"
+        android:text="Your order was successfull !"
+        android:textAppearance="@style/BoldFont22"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/paymentMethodTextView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:gravity="center"
+        android:layout_below="@+id/paymentMethodTextView"
+        android:letterSpacing="0"
+        android:text="@string/you_will_get_a_response_within_a_few_minutes"
+        android:textAppearance="@style/MediumFont15"
+        android:textColor="@color/login_grey" />
+
+    <Button
+        android:id="@+id/trackOrderButton"
+        style="@style/UnElevatedFilledButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:background="@drawable/main_gradient"
+        android:text="@string/track_order"
+        android:layout_above="@+id/backToHome"
+        android:textAppearance="@style/BoldFont16"
+        app:backgroundTint="@null" />
+
+    <TextView
+        android:id="@+id/backToHome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/_12sdp"
+        android:letterSpacing="0"
+        android:layout_alignParentBottom="true"
+        android:text="@string/back_to_home"
+        android:textAppearance="@style/MediumFont16"
+        android:textColor="@color/black" />
+
+</RelativeLayout>
+
