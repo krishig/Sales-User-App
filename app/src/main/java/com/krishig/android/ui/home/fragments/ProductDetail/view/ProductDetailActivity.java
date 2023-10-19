@@ -292,7 +292,7 @@ public class ProductDetailActivity extends BaseActivity<ActivityProductDetailBin
             public void onResponse(Call<ApiResponseObject<ProductId>> call, Response<ApiResponseObject<ProductId>> response) {
                 ApiResponseObject<ProductId> categories = response.body();
                 hideProgressDialog();
-                if (categories != null) {
+                if (categories.getData() != null) {
                     System.out.println(categories.getData().getResult().getProductImage().size());
                     if (categories.getData().getResult().getProductImage().size() == 0) {
                         viewBinding.productImageView.setVisibility(View.VISIBLE);

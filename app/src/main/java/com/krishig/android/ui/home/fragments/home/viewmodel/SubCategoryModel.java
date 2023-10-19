@@ -246,8 +246,9 @@ public class SubCategoryModel extends ViewModel {
         return searchUserError;
     }
 
-    public void searchCustomer(String findByMobile, String accept, String authorisation, String token) {
-        remoteRepository.searchCustomer(findByMobile, accept, authorisation, token).enqueue(new ApiCallback<ApiResponseObject<Customer>>() {
+    public void searchCustomer(String pageNumber,
+                               String pageSize,String findByMobile, String accept, String authorisation, String token) {
+        remoteRepository.searchCustomer(pageNumber,pageSize,findByMobile, accept, authorisation, token).enqueue(new ApiCallback<ApiResponseObject<Customer>>() {
             @Override
             public void onSuccess(Response<ApiResponseObject<Customer>> response) {
                 if (response.body() != null) {
@@ -557,9 +558,9 @@ public class SubCategoryModel extends ViewModel {
         return getOrderBookUserError;
     }
 
-    public void getAllOrder(String page_number, String items_per_page,
+    public void getAllOrder(String customerId,String page_number, String items_per_page,
                             String accept, String authorisation, String token) {
-        remoteRepository.getAllOrder(page_number,items_per_page , accept, authorisation, token).enqueue(new ApiCallback<ApiResponseObject<Order>>() {
+        remoteRepository.getAllOrder(customerId,page_number,items_per_page , accept, authorisation, token).enqueue(new ApiCallback<ApiResponseObject<Order>>() {
             @Override
             public void onSuccess(Response<ApiResponseObject<Order>> response) {
                 if (response.body() != null) {

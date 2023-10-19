@@ -101,6 +101,10 @@
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name="com.krishig.android.ui.addToBag.view.AddToFragment"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name="com.krishig.android.ui.splash.view.SplashActivity"
             android:exported="true"
             android:theme="@style/AppTheme.NoActionBar">

@@ -42,10 +42,11 @@ public class SubCategoryAndProductActivity extends BaseActivity<ActivitySubCateg
     String subCategoryId = "", brandId = "",subCategoryName = "";
     TopSeedsViewAdapter topSeedsViewAdapter;
     ArrayList<Product.Result> seedArrayList = new ArrayList<>();
+    ArrayList<Product.Result> DataArrayList = new ArrayList<>();
     private ApiService apiService;
 
     int totalPages = 0, count = 1;
-    String itemPerPage = "10";
+    String itemPerPage = "20";
 
     @Override
     protected ActivitySubCategoryAndProductBinding getViewBinding() {
@@ -194,7 +195,7 @@ public class SubCategoryAndProductActivity extends BaseActivity<ActivitySubCateg
                 ApiResponseObject<Product> categories = response.body();
                 hideProgressDialog();
                 viewBinding.idPBLoading.setVisibility(View.GONE);
-                if (categories != null) {
+                if (categories.getData() != null) {
                     int size = categories.getData().getResult().size();
                     if (size == 0) {
                         viewBinding.seedsRecyclerView.setVisibility(View.GONE);
@@ -206,8 +207,9 @@ public class SubCategoryAndProductActivity extends BaseActivity<ActivitySubCateg
                         viewBinding.errorTextView.setVisibility(View.GONE);
                         totalPages = categories.getData().getTotalPages();
                         seedArrayList = categories.getData().getResult();
+                        DataArrayList.addAll(seedArrayList);
                         topSeedsViewAdapter.clearAllItem();
-                        topSeedsViewAdapter.replaceArrayList(seedArrayList);
+                        topSeedsViewAdapter.replaceArrayList(DataArrayList);
                     }
                 }
             }

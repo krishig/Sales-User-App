@@ -218,7 +218,7 @@
     <string name="cart">Cart</string>
     <string name="document">Document</string>
     <string name="profile">Profile</string>
-    <string name="fertiliser">Fertilizer</string>
+    <string name="fertiliser">Fertilizers</string>
     <string name="add_to_bag">Add To Bag</string>
     <string name="my_bag">My Bag</string>
     <string name="add_more_product">Add More Product</string>
@@ -250,5 +250,6 @@
     <string name="brands">Brands</string>
     <string name="order_details">View Order Details</string>
     <string name="order_ids">Order ID :</string>
+    <string name="block">Block</string>
 
 </resources>

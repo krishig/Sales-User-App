@@ -50,31 +50,6 @@ public class LoginViewModel extends ViewModel {
     }
 
 
-    public void login(RequestBody body, String accept, String authorisation) {
-        remoteRepository.login(body, accept, authorisation).enqueue(new ApiCallback<ApiResponseObject<User>>() {
-            @Override
-            public void onSuccess(Response<ApiResponseObject<User>> response) {
-                if (response.body() != null) {
-                    if (response.isSuccessful()) {
-                        if (response.body().isError()) {
-                            userError.setValue(response.body().getMessage());
-                        } else {
-                            userSuccess.setValue(response.body().getData());
-                        }
-                    } else {
-                        userError.setValue(response.body().getMessage());
-                    }
-                } else
-                    userError.setValue(null);
-            }
-
-            @Override
-            public void onFailure(NetworkException networkException) {
-                userError.setValue(networkException.getDisplayMessage());
-            }
-        });
-
-    }
 
 
 

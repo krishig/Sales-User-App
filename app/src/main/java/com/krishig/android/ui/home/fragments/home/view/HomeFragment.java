@@ -3,7 +3,6 @@ package com.krishig.android.ui.home.fragments.home.view;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
@@ -43,11 +42,13 @@ import com.krishig.android.ui.home.fragments.home.adapter.TopSeedsViewAdapter;
 import com.krishig.android.ui.home.fragments.home.adapter.ViewPagerLeadAdapter;
 import com.krishig.android.ui.home.fragments.home.viewmodel.HomeFragmentViewModel;
 import com.krishig.android.ui.home.view.HomeActivity;
+import com.krishig.android.ui.login.view.LoginActivity;
 import com.krishig.android.ui.search.SearchActivity;
 import com.krishig.android.ui.seeAllBrands.SeeAllBrandsActivity;
 import com.krishig.android.ui.seeAllProduct.SeeAllProductActivity;
 import com.library.adapter.recyclerview.LayoutManagerUtils;
 import com.library.adapter.recyclerview.listener.OnRecyclerViewItemChildClick;
+import com.library.utilities.activity.ActivityUtils;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 
@@ -126,8 +127,8 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> {
         viewBinding.imageSlider.setSliderAdapter(categoriesOffersBannerSliderAdapter);
 
 
-        viewBinding.tabLayout.addTab(viewBinding.tabLayout.newTab().setText("Seed"));
-        viewBinding.tabLayout.addTab(viewBinding.tabLayout.newTab().setText("Fertiliser"));
+        viewBinding.tabLayout.addTab(viewBinding.tabLayout.newTab().setText("Seeds"));
+        viewBinding.tabLayout.addTab(viewBinding.tabLayout.newTab().setText("Fertilizers"));
         FragmentManager fragmentManager = getChildFragmentManager();
         assessmentViewPagerAdapter = new ViewPagerLeadAdapter(fragmentManager, getLifecycle());
         viewBinding.viewPager2.setAdapter(assessmentViewPagerAdapter);
@@ -293,9 +294,11 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> {
         viewBinding.cartImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragmentNavigator.popAll();
+                Intent intent = new Intent(getActivity(), AddToFragment.class);
+                startActivity(intent);
+            /*    fragmentNavigator.popAll();
                 AddToFragment addToFragment = new AddToFragment();
-                fragmentNavigator.push(addToFragment, false, true);
+                fragmentNavigator.push(addToFragment, false, true);*/
             }
         });
 
@@ -423,8 +426,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> {
             public void onResponse(Call<ApiResponseArray<Category>> call, Response<ApiResponseArray<Category>> response) {
                 ApiResponseArray<Category> categories = response.body();
                 hideProgressDialog();
-                if (categories != null) {
-
+                if (categories.getData() != null) {
                     for (int i = 0; i < categories.getData().size(); i++) {
                         if (categories.getData().get(i).getCategory_name().equalsIgnoreCase("seeds")) {
                             categoryId = categories.getData().get(i).getId();
@@ -447,6 +449,24 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> {
                             sharedPreferencesHelper.getKeyToken());
                     showProgressDialog();
 
+                } else {
+                    if (response.body().getMessage().equalsIgnoreCase("Please login again!")) ;
+                    {
+                        sharedPreferencesHelper.setCustomerName(null);
+                        sharedPreferencesHelper.setCustomerCartId(null);
+                        sharedPreferencesHelper.setCustomerID(null);
+                        sharedPreferencesHelper.setCustomerMobileNumber(null);
+                        sharedPreferencesHelper.setRemember(false);
+                        Intent intent = ActivityUtils.launchActivityWithClearBackStack(getActivity(), LoginActivity.class);
+                        startActivity(intent);
+                    }
+                    viewBinding.seedsRecyclerView.setVisibility(View.GONE);
+                    viewBinding.errorImageViewSeeds.setVisibility(View.VISIBLE);
+                    viewBinding.errorTextViewSeeds.setVisibility(View.VISIBLE);
+
+                    viewBinding.fertilizerRecyclerView.setVisibility(View.GONE);
+                    viewBinding.errorImageViewFertilizer.setVisibility(View.VISIBLE);
+                    viewBinding.errorTextViewFertilizer.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -469,14 +489,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> {
             public void onResponse(Call<ApiResponseObject<SubCategory>> call, Response<ApiResponseObject<SubCategory>> response) {
                 ApiResponseObject<SubCategory> categories = response.body();
                 hideProgressDialog();
-                if (categories != null) {
-                    int size = categories.getData().getResultArrayList().size();
-                    if (size == 0) {
 
-                    } else {
-
-                    }
-                }
             }
 
             @Override
@@ -498,36 +511,43 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> {
             public void onResponse(Call<ApiResponseObject<ProductBrands>> call, Response<ApiResponseObject<ProductBrands>> response) {
                 ApiResponseObject<ProductBrands> categories = response.body();
                 hideProgressDialog();
-                if (categories != null) {
-                    int size = categories.getData().getResultArrayList().size();
-                    if (size == 0) {
+                if (response.body() != null) {
+                    if (categories.getData() != null) {
+                        int size = categories.getData().getResultArrayList().size();
+                        if (size == 0) {
+                            viewBinding.topBrandRecyclerView.setVisibility(View.GONE);
+                            viewBinding.errorImageViewTopBrands.setVisibility(View.VISIBLE);
+                            viewBinding.errorTextViewTopBrands.setVisibility(View.VISIBLE);
+                        } else {
+                            viewBinding.topBrandRecyclerView.setVisibility(View.VISIBLE);
+                            viewBinding.errorImageViewTopBrands.setVisibility(View.GONE);
+                            viewBinding.errorTextViewTopBrands.setVisibility(View.GONE);
+                            // topBrandArrayList = categories.getData().getResultArrayList();
+
+                            topBrandArrayList.clear();
+                            ProductBrands.Result resultArrayList = null;
+                            if (size >= 8) {
+                                for (int i = 0; i < 8; i++) {
+                                    resultArrayList = categories.getData().getResultArrayList().get(i);
+                                    topBrandArrayList.add(resultArrayList);
+                                }
+                            } else {
+                                for (int i = 0; i < size; i++) {
+                                    resultArrayList = categories.getData().getResultArrayList().get(i);
+                                    topBrandArrayList.add(resultArrayList);
+                                }
+                            }
+
+                            topBrandsViewAdapter.clearAllItem();
+                            topBrandsViewAdapter.addArrayList(topBrandArrayList);
+                        }
+                    } else {
                         viewBinding.topBrandRecyclerView.setVisibility(View.GONE);
                         viewBinding.errorImageViewTopBrands.setVisibility(View.VISIBLE);
                         viewBinding.errorTextViewTopBrands.setVisibility(View.VISIBLE);
-                    } else {
-                        viewBinding.topBrandRecyclerView.setVisibility(View.VISIBLE);
-                        viewBinding.errorImageViewTopBrands.setVisibility(View.GONE);
-                        viewBinding.errorTextViewTopBrands.setVisibility(View.GONE);
-                        // topBrandArrayList = categories.getData().getResultArrayList();
-
-                        topBrandArrayList.clear();
-                        ProductBrands.Result resultArrayList = null;
-                        if (size >= 8) {
-                            for (int i = 0; i < 8; i++) {
-                                resultArrayList = categories.getData().getResultArrayList().get(i);
-                                topBrandArrayList.add(resultArrayList);
-                            }
-                        } else {
-                            for (int i = 0; i < size; i++) {
-                                resultArrayList = categories.getData().getResultArrayList().get(i);
-                                topBrandArrayList.add(resultArrayList);
-                            }
-                        }
-
-                        topBrandsViewAdapter.clearAllItem();
-                        topBrandsViewAdapter.addArrayList(topBrandArrayList);
                     }
                 }
+
             }
 
             @Override
@@ -549,7 +569,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> {
             public void onResponse(Call<ApiResponseObject<Product>> call, Response<ApiResponseObject<Product>> response) {
                 ApiResponseObject<Product> categories = response.body();
                 hideProgressDialog();
-                if (categories != null) {
+                if (categories.getData() != null) {
                     int size = categories.getData().getResult().size();
                     if (size == 0) {
                         viewBinding.seedsRecyclerView.setVisibility(View.GONE);
@@ -577,6 +597,10 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> {
                         topSeedsViewAdapter.clearAllItem();
                         topSeedsViewAdapter.replaceArrayList(seedArrayList);
                     }
+                } else {
+                    viewBinding.seedsRecyclerView.setVisibility(View.GONE);
+                    viewBinding.errorImageViewSeeds.setVisibility(View.VISIBLE);
+                    viewBinding.errorTextViewSeeds.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -599,7 +623,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> {
             public void onResponse(Call<ApiResponseObject<Product>> call, Response<ApiResponseObject<Product>> response) {
                 ApiResponseObject<Product> categories = response.body();
                 hideProgressDialog();
-                if (categories != null) {
+                if (categories.getData() != null) {
                     int size = categories.getData().getResult().size();
                     if (size == 0) {
                         viewBinding.fertilizerRecyclerView.setVisibility(View.GONE);
@@ -627,6 +651,10 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> {
                         topFertilizerViewAdapter.clearAllItem();
                         topFertilizerViewAdapter.replaceArrayList(fertilizerList);
                     }
+                } else {
+                    viewBinding.fertilizerRecyclerView.setVisibility(View.GONE);
+                    viewBinding.errorImageViewFertilizer.setVisibility(View.VISIBLE);
+                    viewBinding.errorTextViewFertilizer.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -650,11 +678,15 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> {
                 ApiResponseArray<SliderItem> categories = response.body();
                 hideProgressDialog();
                 sliderItemList.clear();
-                for (int i = 0; i < categories.getData().size(); i++) {
-                    sliderItemList.add(new SliderItem(categories.getData().get(i).getImage()));
+                if (response.body() != null) {
+                    if (categories.getData() != null) {
+                        for (int i = 0; i < categories.getData().size(); i++) {
+                            sliderItemList.add(new SliderItem(categories.getData().get(i).getImage()));
+                        }
+                        categoriesOffersBannerSliderAdapter.renewItems(sliderItemList);
+                        viewBinding.imageSlider.setSliderAdapter(categoriesOffersBannerSliderAdapter);
+                    }
                 }
-                categoriesOffersBannerSliderAdapter.renewItems(sliderItemList);
-                viewBinding.imageSlider.setSliderAdapter(categoriesOffersBannerSliderAdapter);
 
             }
 

@@ -296,7 +296,9 @@
                     android:includeFontPadding="false"
                     android:lineSpacingExtra="0dp"
                     app:endIconCheckable="true"
-                    app:endIconMode="clear_text"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@drawable/ic_search"
+                    app:endIconTint="@color/black"
                     app:errorEnabled="false"
                     app:errorIconDrawable="@null">
 

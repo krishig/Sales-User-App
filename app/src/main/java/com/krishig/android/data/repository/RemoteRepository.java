@@ -38,9 +38,6 @@ public class RemoteRepository {
     }
 
 
-    public Call<ApiResponseObject<User>> login(RequestBody body, String accept, String authorisation) {
-        return apiService.login(body, accept, authorisation);
-    }
 
     public Call<ApiResponseObject<Customer>> addCustomer(RequestBody body, String accept, String authorisation, String token) {
         return apiService.addCustomer(body, accept, authorisation, token);
@@ -58,10 +55,12 @@ public class RemoteRepository {
         return apiService.orderBook(body, accept, authorisation, token);
     }
 
-    public Call<ApiResponseObject<Order>> getAllOrder(String page_number,String items_per_page,
+    public Call<ApiResponseObject<Order>> getAllOrder(String customerId,String page_number,String items_per_page,
                                                       String accept, String authorisation, String token) {
-        return apiService.getAllOrder(page_number,items_per_page,accept, authorisation, token);
+        return apiService.getAllOrder(customerId,page_number,items_per_page,accept, authorisation, token);
     }
+
+
 
     public Call<ApiResponseObject<Customer>> putCustomer(String customerId, RequestBody body, String accept, String authorisation, String token) {
         return apiService.putCustomer(customerId, body, accept, authorisation, token);
@@ -102,8 +101,9 @@ public class RemoteRepository {
         return apiService.fetchOrderDetail(orderId, accept, authorisation, token);
     }
 
-    public Call<ApiResponseObject<Customer>> searchCustomer(String findByMobile, String accept, String authorisation, String token) {
-        return apiService.searchCustomer(findByMobile, accept, authorisation, token);
+    public Call<ApiResponseObject<Customer>> searchCustomer(String pageNumber,
+                                                            String pageSize,String findByMobile, String accept, String authorisation, String token) {
+        return apiService.searchCustomer(pageNumber,pageSize,findByMobile, accept, authorisation, token);
     }
 
 

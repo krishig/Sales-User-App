@@ -171,9 +171,9 @@
                 android:id="@+id/linear1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
                 android:layout_below="@+id/descriptionTextView"
                 android:layout_marginTop="@dimen/_15sdp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -198,23 +198,23 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:visibility="gone"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_organic" />
+                            android:src="@drawable/ic_organic"
+                            android:visibility="gone" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
                             android:layout_gravity="center"
+                            android:gravity="center"
                             android:orientation="vertical">
 
                             <TextView
                                 android:id="@+id/discountTextView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:letterSpacing="0"
                                 android:gravity="center"
+                                android:letterSpacing="0"
                                 android:text=""
                                 android:textAppearance="@style/BoldFont16"
                                 android:textColor="@color/colorPrimary" />
@@ -255,23 +255,23 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:visibility="gone"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_calender" />
+                            android:src="@drawable/ic_calender"
+                            android:visibility="gone" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
                             android:layout_gravity="center"
+                            android:gravity="center"
                             android:orientation="vertical">
 
                             <TextView
                                 android:id="@+id/discountPercentTextView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:letterSpacing="0"
                                 android:gravity="center"
+                                android:letterSpacing="0"
                                 android:text=""
                                 android:textAppearance="@style/BoldFont16"
                                 android:textColor="@color/colorPrimary" />

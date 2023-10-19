@@ -194,7 +194,7 @@ public class SeeAllBrandsActivity extends BaseActivity<ActivitySeeAllBrandsBindi
             public void onResponse(Call<ApiResponseObject<ProductBrands>> call, Response<ApiResponseObject<ProductBrands>> response) {
                 ApiResponseObject<ProductBrands> categories = response.body();
                 hideProgressDialog();
-                if (categories != null) {
+                if (categories.getData() != null) {
                     viewBinding.idPBLoading.setVisibility(View.GONE);
                     int size = categories.getData().getResultArrayList().size();
                     if (size == 0) {
@@ -211,6 +211,10 @@ public class SeeAllBrandsActivity extends BaseActivity<ActivitySeeAllBrandsBindi
                         topBrandsViewAdapter.clearAllItem();
                         topBrandsViewAdapter.addArrayList(DataArrayList);
                     }
+                }else{
+                    viewBinding.seedsRecyclerView.setVisibility(View.GONE);
+                    viewBinding.errorImageViewSeeds.setVisibility(View.VISIBLE);
+                    viewBinding.errorTextViewSeeds.setVisibility(View.VISIBLE);
                 }
             }
 

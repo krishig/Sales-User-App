@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
+import androidx.core.widget.NestedScrollView;
+
 import com.krishig.android.Navigator.activity.ActivityNavigator;
 import com.krishig.android.Navigator.fragment.FragmentNavigator;
 import com.krishig.android.R;
@@ -37,11 +39,14 @@ import retrofit2.Response;
 public class SearchActivity extends BaseActivity<ActivitySearchBinding> {
     CategoryRecyclerViewAdapter categoryRecyclerViewAdapter;
     ArrayList<SubCategory.Result> arrayList = new ArrayList<>();
+    ArrayList<SubCategory.Result> DataArrayList = new ArrayList<>();
     SubCategoryModel viewModel;
 
     @Inject
     SharedPreferencesHelper sharedPreferencesHelper;
     private ApiService apiService;
+    int totalPages = 0, count = 1;
+    String itemPerPageInProduct = "50", searchData = "";
 
     @Override
     protected ActivitySearchBinding getViewBinding() {
@@ -100,7 +105,8 @@ public class SearchActivity extends BaseActivity<ActivitySearchBinding> {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (editable.toString().equalsIgnoreCase("")) {
+                searchData=editable.toString();
+                if (searchData.equalsIgnoreCase("")) {
                     viewBinding.seedsRecyclerView.setVisibility(View.GONE);
                     viewBinding.errorImageViewSeeds.setVisibility(View.VISIBLE);
                     viewBinding.errorTextViewSeeds.setVisibility(View.VISIBLE);
@@ -108,7 +114,9 @@ public class SearchActivity extends BaseActivity<ActivitySearchBinding> {
                     viewBinding.seedsRecyclerView.setVisibility(View.VISIBLE);
                     viewBinding.errorImageViewSeeds.setVisibility(View.GONE);
                     viewBinding.errorTextViewSeeds.setVisibility(View.GONE);
-                    subCategorySearch(editable.toString(), "application/json", "application/json",
+                    DataArrayList.clear();
+                    count = 1;
+                    subCategorySearch(itemPerPageInProduct, String.valueOf(count), searchData, "application/json", "application/json",
                             sharedPreferencesHelper.getKeyToken());
                 }
             }
@@ -154,6 +162,23 @@ public class SearchActivity extends BaseActivity<ActivitySearchBinding> {
                 finish();
             }
         });
+
+        viewBinding.nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
+                    ++count;
+                    if (count <= totalPages) {
+                        viewBinding.idPBLoading.setVisibility(View.VISIBLE);
+                        subCategorySearch(itemPerPageInProduct, String.valueOf(count), searchData, "application/json", "application/json",
+                                sharedPreferencesHelper.getKeyToken());
+
+                    }
+
+                }
+            }
+        });
+
     }
 
     @Override
@@ -183,28 +208,32 @@ public class SearchActivity extends BaseActivity<ActivitySearchBinding> {
         }
     }
 
-    private void subCategorySearch(String search_sub_category, String accept, String authorisation, String token) {
+    private void subCategorySearch(String items_per_page,
+                                   String page_number, String search_sub_category, String accept, String authorisation, String token) {
         apiService = RetrofitClient.getRetrofitInstance2().create(ApiService.class);
         // Example API call
-        Call<ApiResponseObject<SubCategory>> call = apiService.subCategorySearch(search_sub_category, accept, authorisation, token);
+        Call<ApiResponseObject<SubCategory>> call = apiService.subCategorySearch(items_per_page, page_number, search_sub_category, accept, authorisation, token);
         call.enqueue(new Callback<ApiResponseObject<SubCategory>>() {
             @Override
             public void onResponse(Call<ApiResponseObject<SubCategory>> call, Response<ApiResponseObject<SubCategory>> response) {
                 ApiResponseObject<SubCategory> categories = response.body();
                 hideProgressDialog();
-                if (categories != null) {
+                viewBinding.idPBLoading.setVisibility(View.GONE);
+                if (categories.getData() != null) {
                     int size = categories.getData().getResultArrayList().size();
                     if (size == 0) {
                         viewBinding.seedsRecyclerView.setVisibility(View.GONE);
                         viewBinding.errorImageViewSeeds.setVisibility(View.VISIBLE);
                         viewBinding.errorTextViewSeeds.setVisibility(View.VISIBLE);
                     } else {
+                        totalPages = categories.getData().getTotal_pages();
                         viewBinding.seedsRecyclerView.setVisibility(View.VISIBLE);
                         viewBinding.errorImageViewSeeds.setVisibility(View.GONE);
                         viewBinding.errorTextViewSeeds.setVisibility(View.GONE);
                         arrayList = categories.getData().getResultArrayList();
+                        DataArrayList.addAll(arrayList);
                         categoryRecyclerViewAdapter.clearAllItem();
-                        categoryRecyclerViewAdapter.replaceArrayList(arrayList);
+                        categoryRecyclerViewAdapter.replaceArrayList(DataArrayList);
                     }
                 }
             }

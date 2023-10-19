@@ -200,7 +200,7 @@ public class SeeAllProductActivity extends BaseActivity<ActivitySeeAllProductBin
             public void onResponse(Call<ApiResponseObject<Product>> call, Response<ApiResponseObject<Product>> response) {
                 ApiResponseObject<Product> categories = response.body();
                 hideProgressDialog();
-                if (categories != null) {
+                if (categories.getData() != null) {
                     viewBinding.idPBLoading.setVisibility(View.GONE);
                     int size = categories.getData().getResult().size();
                     if (size == 0) {
@@ -217,6 +217,10 @@ public class SeeAllProductActivity extends BaseActivity<ActivitySeeAllProductBin
                         topSeedsViewAdapter.clearAllItem();
                         topSeedsViewAdapter.replaceArrayList(DataArrayList);
                     }
+                }else{
+                    viewBinding.seedsRecyclerView.setVisibility(View.GONE);
+                    viewBinding.errorImageViewSeeds.setVisibility(View.VISIBLE);
+                    viewBinding.errorTextViewSeeds.setVisibility(View.VISIBLE);
                 }
             }
 

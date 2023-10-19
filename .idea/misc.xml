@@ -88,7 +88,7 @@
         <entry key="app/src/main/res/layout/activity_forget_password.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.2" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/activity_manage_customer.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_manage_customer.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_order.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_order_detail.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_order_success.xml" value="0.22" />
@@ -109,13 +109,13 @@
         <entry key="app/src/main/res/layout/content_main.xml" value="0.22" />
         <entry key="app/src/main/res/layout/dialog_select_brand_subCategory.xml" value="0.19635416666666666" />
         <entry key="app/src/main/res/layout/dialog_select_brand_sub_category.xml" value="0.19635416666666666" />
-        <entry key="app/src/main/res/layout/fragment_add_to.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_add_to.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.2" />
-        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_image_picker_dialog.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_manage_brand.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_manage_category.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_manage_orders.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_manage_orders.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_manage_product.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_manage_produt.xml" value="0.19635416666666666" />
         <entry key="app/src/main/res/layout/fragment_manage_setting.xml" value="0.25" />
@@ -143,7 +143,7 @@
         <entry key="app/src/main/res/layout/item_sub_category_layout.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_top_brand_fragment.xml" value="0.75" />
         <entry key="app/src/main/res/layout/item_top_brand_fragment_second.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/mobile_verification_layout.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/mobile_verification_layout.xml" value="0.25" />
         <entry key="app/src/main/res/layout/multi_select_dialog.xml" value="0.17447916666666666" />
         <entry key="app/src/main/res/layout/multi_select_dialog_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/number_progress_bar_wait.xml" value="0.19635416666666666" />

@@ -280,7 +280,7 @@ public class SecondFragment extends BaseFragment<FragmentSecondBinding> {
             public void onResponse(Call<ApiResponseArray<Category>> call, Response<ApiResponseArray<Category>> response) {
                 ApiResponseArray<Category> categories = response.body();
                 hideProgressDialog();
-                if (categories != null) {
+                if (categories.getData() != null) {
                     for (int i = 0; i < categories.getData().size(); i++) {
                         if (categories.getData().get(i).getCategory_name().equalsIgnoreCase("fertilizer")) {
                             categoryId = categories.getData().get(i).getId();
@@ -292,6 +292,10 @@ public class SecondFragment extends BaseFragment<FragmentSecondBinding> {
                             sharedPreferencesHelper.getKeyToken());
                     showProgressDialog();
 
+                }else{
+                    viewBinding.homeRecyclerView.setVisibility(View.GONE);
+                    viewBinding.errorImageView.setVisibility(View.VISIBLE);
+                    viewBinding.errorTextView.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -314,7 +318,7 @@ public class SecondFragment extends BaseFragment<FragmentSecondBinding> {
             public void onResponse(Call<ApiResponseObject<SubCategory>> call, Response<ApiResponseObject<SubCategory>> response) {
                 ApiResponseObject<SubCategory> categories = response.body();
                 hideProgressDialog();
-                if (categories != null) {
+                if (categories.getData() != null) {
                     int size = categories.getData().getResultArrayList().size();
                     if (size == 0) {
                         viewBinding.homeRecyclerView.setVisibility(View.GONE);
@@ -340,6 +344,10 @@ public class SecondFragment extends BaseFragment<FragmentSecondBinding> {
                         categoryRecyclerViewAdapter.clearAllItem();
                         categoryRecyclerViewAdapter.addArrayList(arrayList);
                     }
+                }else{
+                    viewBinding.homeRecyclerView.setVisibility(View.GONE);
+                    viewBinding.errorImageView.setVisibility(View.VISIBLE);
+                    viewBinding.errorTextView.setVisibility(View.VISIBLE);
                 }
             }
 

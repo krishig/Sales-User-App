@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/addCustomer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/addCustomer"
     tools:context=".ui.home.addCustomer.AddCustomerActivity">
 
     <ImageView
@@ -179,33 +179,6 @@
                     android:textColor="@color/colorHeadingTextView" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/villageNameInputLayout"
-                style="@style/TextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:hint="@string/village_name"
-                android:includeFontPadding="false"
-                android:lineSpacingExtra="0dp"
-                app:endIconCheckable="true"
-                app:endIconMode="clear_text"
-                app:errorEnabled="false"
-                app:errorIconDrawable="@null">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/villageNameTextInputEditText"
-                    style="@style/TextInputEditText"
-                    android:imeOptions="actionNext"
-                    android:importantForAutofill="no"
-                    android:includeFontPadding="false"
-                    android:inputType="textPersonName"
-                    android:lineSpacingExtra="0dp"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:textAppearance="@style/MediumFont12"
-                    android:textColor="@color/colorHeadingTextView" />
-            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/pinCodeInputLayout"
@@ -217,7 +190,9 @@
                 android:includeFontPadding="false"
                 android:lineSpacingExtra="0dp"
                 app:endIconCheckable="true"
-                app:endIconMode="clear_text"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_search"
+                app:endIconTint="@color/black"
                 app:errorEnabled="false"
                 app:errorIconDrawable="@null">
 
@@ -235,6 +210,66 @@
                     android:textAppearance="@style/MediumFont12"
                     android:textColor="@color/colorHeadingTextView" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/villageNameInputLayout"
+                style="@style/TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:hint="@string/village_name"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="0dp"
+                app:endIconCheckable="true"
+                app:endIconMode="custom"
+                app:endIconTint="@color/black"
+                app:endIconDrawable="@drawable/ccp_ic_arrow_drop_down"
+                app:errorEnabled="false"
+                app:errorIconDrawable="@null">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/villageNameTextInputEditText"
+                    style="@style/TextInputEditText"
+                    android:imeOptions="actionNext"
+                    android:importantForAutofill="no"
+                    android:includeFontPadding="false"
+                    android:inputType="textPersonName"
+                    android:lineSpacingExtra="0dp"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textAppearance="@style/MediumFont12"
+                    android:textColor="@color/colorHeadingTextView" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/blockInputLayout"
+                style="@style/TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:hint="@string/block"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="0dp"
+                app:endIconCheckable="true"
+                app:endIconMode="clear_text"
+                app:errorEnabled="false"
+                app:errorIconDrawable="@null">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/blockTextInputEditText"
+                    style="@style/TextInputEditText"
+                    android:imeOptions="actionNext"
+                    android:importantForAutofill="no"
+                    android:includeFontPadding="false"
+                    android:inputType="textPersonName"
+                    android:lineSpacingExtra="0dp"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textAppearance="@style/MediumFont12"
+                    android:textColor="@color/colorHeadingTextView" />
+            </com.google.android.material.textfield.TextInputLayout>
+
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/districtInputLayout"
@@ -263,6 +298,7 @@
                     android:textAppearance="@style/MediumFont12"
                     android:textColor="@color/colorHeadingTextView" />
             </com.google.android.material.textfield.TextInputLayout>
+
 
 
             <com.google.android.material.textfield.TextInputLayout

@@ -86,13 +86,13 @@ public class ManageProductFragment extends BaseFragment<FragmentManageProductBin
 
     boolean visible = true;
 
-    int totalPages = 0, count = 1, totalPagesSearch = 0;
+    int totalPages = 0, count = 1;
 
 
     String itemPerPageInProduct = "20";
 
 
-    String brandNameData = "", subCategoryNameData = "";
+    String brandNameData = "", subCategoryNameData = "", searchData = "";
 
     BottomSheetDialog bottomSheetDialog;
 
@@ -163,16 +163,17 @@ public class ManageProductFragment extends BaseFragment<FragmentManageProductBin
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (editable.toString().equalsIgnoreCase("")) {
-                    count = 1;
+                searchData = editable.toString();
+                if (searchData.equalsIgnoreCase("")) {
+                /*    count = 1;
                     dataStoreHomeArrayList.clear();
                     getProduct(itemPerPageInProduct, String.valueOf(count), "application/json", "application/json",
                             sharedPreferencesHelper.getKeyToken());
-                    showProgressDialog();
+                    showProgressDialog();*/
                 } else {
                     count = 1;
-                    int itemPerPageInt = Integer.parseInt(itemPerPageInProduct);
-                    productSearch(String.valueOf(itemPerPageInt * totalPages), String.valueOf(count), editable.toString(), "application/json", "application/json",
+                    dataStoreHomeArrayList.clear();
+                    productSearch(itemPerPageInProduct, String.valueOf(count), searchData, "application/json", "application/json",
                             sharedPreferencesHelper.getKeyToken());
                 }
             }
@@ -222,10 +223,12 @@ public class ManageProductFragment extends BaseFragment<FragmentManageProductBin
                         public void onSelected(Search search, int position) {
                             viewBinding.selectCategoryAppCompatAutoCompleteTextView.setText(search.getItemName());
                             categoryId = search.getItemId();
-                            count = 1;
                             System.out.println("=====categoryId=====" + categoryId);
-                            int itemPerPageInt = Integer.parseInt(itemPerPageInProduct);
-                            getProductFilter(categoryId, subCategoryId, brandId, String.valueOf(itemPerPageInt * totalPages), String.valueOf(count), "application/json", "application/json",
+                            dataStoreHomeArrayList.clear();
+                            count = 1;
+                            searchData = "";
+                            viewBinding.productEditText.setText("");
+                            getProductFilter(categoryId, subCategoryId, brandId, itemPerPageInProduct, String.valueOf(count), "application/json", "application/json",
                                     sharedPreferencesHelper.getKeyToken());
                             showProgressDialog();
 
@@ -258,6 +261,8 @@ public class ManageProductFragment extends BaseFragment<FragmentManageProductBin
                 brandId = "";
                 categoryId = "";
                 count = 1;
+                searchData = "";
+                viewBinding.productEditText.setText("");
                 dataStoreHomeArrayList.clear();
                 getProduct(itemPerPageInProduct, String.valueOf(count), "application/json", "application/json",
                         sharedPreferencesHelper.getKeyToken());
@@ -265,20 +270,31 @@ public class ManageProductFragment extends BaseFragment<FragmentManageProductBin
             }
         });
 
+
         viewBinding.nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
                     ++count;
                     if (count <= totalPages) {
+                        viewBinding.idPBLoading.setVisibility(View.VISIBLE);
                         if (!subCategoryId.equalsIgnoreCase("")) {
-
+                            getProductFilter(categoryId, subCategoryId, brandId, itemPerPageInProduct, String.valueOf(count), "application/json", "application/json",
+                                    sharedPreferencesHelper.getKeyToken());
+                            showProgressDialog();
                         } else if (!brandId.equalsIgnoreCase("")) {
-
+                            getProductFilter(categoryId, subCategoryId, brandId, itemPerPageInProduct, String.valueOf(count), "application/json", "application/json",
+                                    sharedPreferencesHelper.getKeyToken());
+                            showProgressDialog();
                         } else if (!categoryId.equalsIgnoreCase("")) {
-
+                            getProductFilter(categoryId, subCategoryId, brandId, itemPerPageInProduct, String.valueOf(count), "application/json", "application/json",
+                                    sharedPreferencesHelper.getKeyToken());
+                            showProgressDialog();
+                        } else if (!searchData.equalsIgnoreCase("")) {
+                            productSearch(itemPerPageInProduct, String.valueOf(count), searchData, "application/json", "application/json",
+                                    sharedPreferencesHelper.getKeyToken());
                         } else {
-                            viewBinding.idPBLoading.setVisibility(View.VISIBLE);
+                            Log.e("", "scroller--------------------------------");
                             getProduct(itemPerPageInProduct, String.valueOf(count), "application/json", "application/json",
                                     sharedPreferencesHelper.getKeyToken());
                         }
@@ -288,6 +304,7 @@ public class ManageProductFragment extends BaseFragment<FragmentManageProductBin
                 }
             }
         });
+
 
         manageProductAdapter.setOnRecyclerViewItemChildClick(new OnRecyclerViewItemChildClick<Product.Result>() {
             @Override
@@ -338,12 +355,12 @@ public class ManageProductFragment extends BaseFragment<FragmentManageProductBin
         super.onResume();
         System.out.println("===========Resume============");
 
-        getProductBrands("application/json", "application/json",
+     /*   getProductBrands("application/json", "application/json",
                 sharedPreferencesHelper.getKeyToken());
         showProgressDialog();
         getSubCategory("application/json", "application/json",
                 sharedPreferencesHelper.getKeyToken());
-        showProgressDialog();
+        showProgressDialog();*/
         getCategories("application/json", "application/json",
                 sharedPreferencesHelper.getKeyToken());
         showProgressDialog();
@@ -360,8 +377,8 @@ public class ManageProductFragment extends BaseFragment<FragmentManageProductBin
                 ApiResponseObject<Product> categories = response.body();
                 hideProgressDialog();
                 viewBinding.idPBLoading.setVisibility(View.GONE);
-                int size = categories.getData().getResult().size();
-                if (categories != null) {
+                if (categories.getData() != null) {
+                    int size = categories.getData().getResult().size();
                     if (size == 0) {
                         viewBinding.recyclerView.setVisibility(View.GONE);
                         viewBinding.errorImageView.setVisibility(View.VISIBLE);
@@ -378,6 +395,10 @@ public class ManageProductFragment extends BaseFragment<FragmentManageProductBin
                         manageProductAdapter.clearAllItem();
                         manageProductAdapter.replaceArrayList(dataStoreHomeArrayList);
                     }
+                }else{
+                    viewBinding.recyclerView.setVisibility(View.GONE);
+                    viewBinding.errorImageView.setVisibility(View.VISIBLE);
+                    viewBinding.errorTextView.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -391,63 +412,6 @@ public class ManageProductFragment extends BaseFragment<FragmentManageProductBin
         });
     }
 
-    private void getProductBrands(String accept, String authorisation, String token) {
-        apiService = RetrofitClient.getRetrofitInstance2().create(ApiService.class);
-        // Example API call
-        Call<ApiResponseObject<ProductBrands>> call = apiService.getProductBrands(accept, authorisation, token);
-        call.enqueue(new Callback<ApiResponseObject<ProductBrands>>() {
-            @Override
-            public void onResponse(Call<ApiResponseObject<ProductBrands>> call, Response<ApiResponseObject<ProductBrands>> response) {
-                ApiResponseObject<ProductBrands> categories = response.body();
-                hideProgressDialog();
-                if (categories != null) {
-                    int size = categories.getData().getResultArrayList().size();
-                    brandTypeArraylist = categories.getData().getResultArrayList();
-                    brandTypeSearchArrayList.clear();
-                    for (ProductBrands.Result employees1 : brandTypeArraylist) {
-                        brandTypeSearchArrayList.add(new Search(employees1.getId(), employees1.getBrandName()));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponseObject<ProductBrands>> call, Throwable t) {
-                // Handle network or API call failure
-                Log.e("", "onFailure  =" + call.toString());
-                Log.e("", "onFailure  =" + t);
-
-            }
-        });
-    }
-
-    private void getSubCategory(String accept, String authorisation, String token) {
-        apiService = RetrofitClient.getRetrofitInstance2().create(ApiService.class);
-        // Example API call
-        Call<ApiResponseObject<SubCategory>> call = apiService.getSubCategories(accept, authorisation, token);
-        call.enqueue(new Callback<ApiResponseObject<SubCategory>>() {
-            @Override
-            public void onResponse(Call<ApiResponseObject<SubCategory>> call, Response<ApiResponseObject<SubCategory>> response) {
-                ApiResponseObject<SubCategory> categories = response.body();
-                hideProgressDialog();
-                if (categories != null) {
-                    int size = categories.getData().getResultArrayList().size();
-                    vehicleTypeArraylist = categories.getData().getResultArrayList();
-                    vehicleTypeSearchArrayList.clear();
-                    for (SubCategory.Result employees1 : vehicleTypeArraylist) {
-                        vehicleTypeSearchArrayList.add(new Search(employees1.getId(), employees1.getSubCategoryName()));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponseObject<SubCategory>> call, Throwable t) {
-                // Handle network or API call failure
-                Log.e("", "onFailure  =" + call.toString());
-                Log.e("", "onFailure  =" + t);
-
-            }
-        });
-    }
 
     private void getProductFilter(String category_id,
                                   String sub_category_id,
@@ -463,24 +427,31 @@ public class ManageProductFragment extends BaseFragment<FragmentManageProductBin
             public void onResponse(Call<ApiResponseObject<Product>> call, Response<ApiResponseObject<Product>> response) {
                 ApiResponseObject<Product> categories = response.body();
                 hideProgressDialog();
+                viewBinding.idPBLoading.setVisibility(View.GONE);
                 if (categories != null) {
-                    int size = categories.getData().getResult().size();
                     viewBinding.idPBLoading.setVisibility(View.GONE);
-                    if (categories != null) {
+                    if (categories.getData() != null) {
+                        int size = categories.getData().getResult().size();
                         if (size == 0) {
                             viewBinding.recyclerView.setVisibility(View.GONE);
                             viewBinding.errorImageView.setVisibility(View.VISIBLE);
                             viewBinding.errorTextView.setVisibility(View.VISIBLE);
                         } else {
-                            //  totalPages = categories.getData().getTotalPages();
+                            totalPages = categories.getData().getTotalPages();
                             viewBinding.recyclerView.setVisibility(View.VISIBLE);
                             viewBinding.errorImageView.setVisibility(View.GONE);
                             viewBinding.errorTextView.setVisibility(View.GONE);
                             homeArrayList = categories.getData().getResult();
+                            dataStoreHomeArrayList.addAll(homeArrayList);
+                            Log.e("", "dataStoreHomeArrayList==" + dataStoreHomeArrayList.size());
                             Log.e("", "homeArrayList==" + homeArrayList.size());
                             manageProductAdapter.clearAllItem();
-                            manageProductAdapter.replaceArrayList(homeArrayList);
+                            manageProductAdapter.replaceArrayList(dataStoreHomeArrayList);
                         }
+                    }else{
+                        viewBinding.recyclerView.setVisibility(View.GONE);
+                        viewBinding.errorImageView.setVisibility(View.VISIBLE);
+                        viewBinding.errorTextView.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -506,22 +477,29 @@ public class ManageProductFragment extends BaseFragment<FragmentManageProductBin
             public void onResponse(Call<ApiResponseObject<Product>> call, Response<ApiResponseObject<Product>> response) {
                 ApiResponseObject<Product> categories = response.body();
                 hideProgressDialog();
-                int size = categories.getData().getResult().size();
-                if (categories != null) {
+                viewBinding.idPBLoading.setVisibility(View.GONE);
+                if (categories.getData() != null) {
+                    int size = categories.getData().getResult().size();
                     if (size == 0) {
                         viewBinding.recyclerView.setVisibility(View.GONE);
                         viewBinding.errorImageView.setVisibility(View.VISIBLE);
                         viewBinding.errorTextView.setVisibility(View.VISIBLE);
                     } else {
-                        // totalPages = categories.getData().getTotalPages();
+                        totalPages = categories.getData().getTotalPages();
                         viewBinding.recyclerView.setVisibility(View.VISIBLE);
                         viewBinding.errorImageView.setVisibility(View.GONE);
                         viewBinding.errorTextView.setVisibility(View.GONE);
                         homeArrayList = categories.getData().getResult();
+                        dataStoreHomeArrayList.addAll(homeArrayList);
+                        Log.e("", "dataStoreHomeArrayList==" + dataStoreHomeArrayList.size());
                         Log.e("", "homeArrayList==" + homeArrayList.size());
                         manageProductAdapter.clearAllItem();
-                        manageProductAdapter.replaceArrayList(homeArrayList);
+                        manageProductAdapter.replaceArrayList(dataStoreHomeArrayList);
                     }
+                }else{
+                    viewBinding.recyclerView.setVisibility(View.GONE);
+                    viewBinding.errorImageView.setVisibility(View.VISIBLE);
+                    viewBinding.errorTextView.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -569,7 +547,7 @@ public class ManageProductFragment extends BaseFragment<FragmentManageProductBin
             public void onResponse(Call<ApiResponseArray<Category>> call, Response<ApiResponseArray<Category>> response) {
                 ApiResponseArray<Category> categories = response.body();
                 hideProgressDialog();
-                if (categories != null) {
+                if (categories.getData() != null) {
                     int size = categories.getData().size();
                     categoryArraylist = categories.getData();
                     categorySearchArrayList.clear();
@@ -665,10 +643,12 @@ public class ManageProductFragment extends BaseFragment<FragmentManageProductBin
                             brandId = market.getId();
                             brandName = market.getBrandName();
                             bottomSheetDialog.dismiss();
-                            count = 1;
                             System.out.println("=====brandId=====" + brandId);
-                            int itemPerPageInt = Integer.parseInt(itemPerPageInProduct);
-                            getProductFilter(categoryId, subCategoryId, brandId, String.valueOf(itemPerPageInt * totalPages), String.valueOf(count), "application/json", "application/json",
+                            dataStoreHomeArrayList.clear();
+                            count = 1;
+                            searchData = "";
+                            viewBinding.productEditText.setText("");
+                            getProductFilter(categoryId, subCategoryId, brandId, itemPerPageInProduct, String.valueOf(count), "application/json", "application/json",
                                     sharedPreferencesHelper.getKeyToken());
                             showProgressDialog();
                             viewBinding.selectBrandAppCompatAutoCompleteTextView.setText(brandName);
@@ -689,10 +669,12 @@ public class ManageProductFragment extends BaseFragment<FragmentManageProductBin
                             subCategoryName = market.getSubCategoryName();
                             bottomSheetDialog.dismiss();
                             viewBinding.selectSubCategoryAppCompatAutoCompleteTextView.setText(subCategoryName);
-                            count = 1;
                             System.out.println("=====subCategoryId=====" + subCategoryId);
-                            int itemPerPageInt = Integer.parseInt(itemPerPageInProduct);
-                            getProductFilter(categoryId, subCategoryId, brandId, String.valueOf(itemPerPageInt * totalPages), String.valueOf(count), "application/json", "application/json",
+                            dataStoreHomeArrayList.clear();
+                            count = 1;
+                            searchData = "";
+                            viewBinding.productEditText.setText("");
+                            getProductFilter(categoryId, subCategoryId, brandId, itemPerPageInProduct, String.valueOf(count), "application/json", "application/json",
                                     sharedPreferencesHelper.getKeyToken());
                             showProgressDialog();
                             break;
@@ -738,7 +720,7 @@ public class ManageProductFragment extends BaseFragment<FragmentManageProductBin
             public void onResponse(Call<ApiResponseObject<SubCategory>> call, Response<ApiResponseObject<SubCategory>> response) {
                 ApiResponseObject<SubCategory> categories = response.body();
                 hideProgressDialog();
-                if (categories != null) {
+                if (categories.getData() != null) {
                     int size = categories.getData().getResultArrayList().size();
                     if (size == 0) {
                         seedsRecyclerView.setVisibility(View.GONE);
@@ -776,7 +758,7 @@ public class ManageProductFragment extends BaseFragment<FragmentManageProductBin
             public void onResponse(Call<ApiResponseObject<ProductBrands>> call, Response<ApiResponseObject<ProductBrands>> response) {
                 ApiResponseObject<ProductBrands> categories = response.body();
                 hideProgressDialog();
-                if (categories != null) {
+                if (categories.getData() != null) {
                     int size = categories.getData().getResultArrayList().size();
                     if (size == 0) {
                         seedsRecyclerView.setVisibility(View.GONE);
@@ -803,5 +785,64 @@ public class ManageProductFragment extends BaseFragment<FragmentManageProductBin
         });
     }
 
+
+    /*
+    private void getProductBrands(String accept, String authorisation, String token) {
+        apiService = RetrofitClient.getRetrofitInstance2().create(ApiService.class);
+        // Example API call
+        Call<ApiResponseObject<ProductBrands>> call = apiService.getProductBrands(accept, authorisation, token);
+        call.enqueue(new Callback<ApiResponseObject<ProductBrands>>() {
+            @Override
+            public void onResponse(Call<ApiResponseObject<ProductBrands>> call, Response<ApiResponseObject<ProductBrands>> response) {
+                ApiResponseObject<ProductBrands> categories = response.body();
+                hideProgressDialog();
+                if (categories != null) {
+                    int size = categories.getData().getResultArrayList().size();
+                    brandTypeArraylist = categories.getData().getResultArrayList();
+                    brandTypeSearchArrayList.clear();
+                    for (ProductBrands.Result employees1 : brandTypeArraylist) {
+                        brandTypeSearchArrayList.add(new Search(employees1.getId(), employees1.getBrandName()));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponseObject<ProductBrands>> call, Throwable t) {
+                // Handle network or API call failure
+                Log.e("", "onFailure  =" + call.toString());
+                Log.e("", "onFailure  =" + t);
+
+            }
+        });
+    }
+
+    private void getSubCategory(String accept, String authorisation, String token) {
+        apiService = RetrofitClient.getRetrofitInstance2().create(ApiService.class);
+        // Example API call
+        Call<ApiResponseObject<SubCategory>> call = apiService.getSubCategories(accept, authorisation, token);
+        call.enqueue(new Callback<ApiResponseObject<SubCategory>>() {
+            @Override
+            public void onResponse(Call<ApiResponseObject<SubCategory>> call, Response<ApiResponseObject<SubCategory>> response) {
+                ApiResponseObject<SubCategory> categories = response.body();
+                hideProgressDialog();
+                if (categories != null) {
+                    int size = categories.getData().getResultArrayList().size();
+                    vehicleTypeArraylist = categories.getData().getResultArrayList();
+                    vehicleTypeSearchArrayList.clear();
+                    for (SubCategory.Result employees1 : vehicleTypeArraylist) {
+                        vehicleTypeSearchArrayList.add(new Search(employees1.getId(), employees1.getSubCategoryName()));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponseObject<SubCategory>> call, Throwable t) {
+                // Handle network or API call failure
+                Log.e("", "onFailure  =" + call.toString());
+                Log.e("", "onFailure  =" + t);
+
+            }
+        });
+    }*/
 
 }

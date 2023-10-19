@@ -159,6 +159,9 @@ public class Customer {
         @SerializedName("district")
         @Expose
         public String district;
+        @SerializedName("block")
+        @Expose
+        public String block;
         @SerializedName("state")
         @Expose
         public String state;
@@ -180,6 +183,14 @@ public class Customer {
         @SerializedName("customerCartResponseDto")
         @Expose
         public Object customerCartResponseDto;
+
+        public String getBlock() {
+            return block;
+        }
+
+        public void setBlock(String block) {
+            this.block = block;
+        }
 
         public String getId() {
             return id;

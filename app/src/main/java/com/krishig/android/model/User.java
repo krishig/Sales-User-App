@@ -27,6 +27,9 @@ public class User {
     @SerializedName("District")
     @Expose
     public String district;
+    @SerializedName("district")
+    @Expose
+    public String district2;
     @SerializedName("Division")
     @Expose
     public String division;
@@ -39,12 +42,31 @@ public class User {
     @SerializedName("State")
     @Expose
     public String state;
+    @SerializedName("state")
+    @Expose
+    public String state2;
     @SerializedName("Country")
     @Expose
     public String country;
     @SerializedName("pincode")
     @Expose
     public String pincode;
+
+    public String getDistrict2() {
+        return district2;
+    }
+
+    public void setDistrict2(String district2) {
+        this.district2 = district2;
+    }
+
+    public String getState2() {
+        return state2;
+    }
+
+    public void setState2(String state2) {
+        this.state2 = state2;
+    }
 
     public String getToken() {
         return token;

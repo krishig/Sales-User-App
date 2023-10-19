@@ -51,6 +51,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                     address.getHouseNumber() + ","
                             + address.getStreetName() + ","
                             + address.getVillageName() + ","
+                            + address.getBlock() + ","
                             + address.getDistrict() + ","
                             + address.getState() + ","
                             + address.getPostalCode()

@@ -366,23 +366,30 @@ public class FirstFragment extends BaseFragment<FragmentFirstBinding> {
             public void onResponse(Call<ApiResponseArray<Category>> call, Response<ApiResponseArray<Category>> response) {
                 ApiResponseArray<Category> categories = response.body();
                 hideProgressDialog();
-                if (categories != null) {
-                    for (int i = 0; i < categories.getData().size(); i++) {
-                        if (categories.getData().get(i).getCategory_name().equalsIgnoreCase("seeds")) {
-                            categoryId = categories.getData().get(i).getId();
-                            Log.e("", "1==" + categories.getData().get(i).getCategory_name());
+                if (response.body() != null) {
+                    if (categories.getData() != null) {
+                        for (int i = 0; i < categories.getData().size(); i++) {
+                            if (categories.getData().get(i).getCategory_name().equalsIgnoreCase("seeds")) {
+                                categoryId = categories.getData().get(i).getId();
+                                Log.e("", "1==" + categories.getData().get(i).getCategory_name());
+                            }
+                            Log.e("", "2==" + categories.getData().get(i).getCategory_name());
                         }
-                        Log.e("", "2==" + categories.getData().get(i).getCategory_name());
-                    }
-                    getSubCategory(categoryId, "application/json", "application/json",
-                            sharedPreferencesHelper.getKeyToken());
-                    showProgressDialog();
+                        getSubCategory(categoryId, "application/json", "application/json",
+                                sharedPreferencesHelper.getKeyToken());
+                        showProgressDialog();
 
                /*     getProductFilter(categoryId, "application/json", "application/json",
                             sharedPreferencesHelper.getKeyToken());
                     showProgressDialog();*/
 
+                    }else{
+                        viewBinding.homeRecyclerView.setVisibility(View.GONE);
+                        viewBinding.errorImageView.setVisibility(View.VISIBLE);
+                        viewBinding.errorTextView.setVisibility(View.VISIBLE);
+                    }
                 }
+
             }
 
             @Override
@@ -404,7 +411,7 @@ public class FirstFragment extends BaseFragment<FragmentFirstBinding> {
             public void onResponse(Call<ApiResponseObject<SubCategory>> call, Response<ApiResponseObject<SubCategory>> response) {
                 ApiResponseObject<SubCategory> categories = response.body();
                 hideProgressDialog();
-                if (categories != null) {
+                if (categories.getData() != null) {
                     int size = categories.getData().getResultArrayList().size();
                     if (size == 0) {
                         viewBinding.homeRecyclerView.setVisibility(View.GONE);
@@ -430,6 +437,10 @@ public class FirstFragment extends BaseFragment<FragmentFirstBinding> {
                         categoryRecyclerViewAdapter.clearAllItem();
                         categoryRecyclerViewAdapter.addArrayList(arrayList);
                     }
+                }else{
+                    viewBinding.homeRecyclerView.setVisibility(View.GONE);
+                    viewBinding.errorImageView.setVisibility(View.VISIBLE);
+                    viewBinding.errorTextView.setVisibility(View.VISIBLE);
                 }
             }
 

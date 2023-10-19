@@ -43,7 +43,7 @@ public class ManageCustomerActivity extends BaseActivity<ActivityManageCustomerB
     SharedPreferencesHelper sharedPreferencesHelper;
 
     int totalPages = 0, count = 1;
-    String itemPerPageInProduct = "15";
+    String itemPerPageInProduct = "15", searchData = "";
 
     @Override
     protected ActivityManageCustomerBinding getViewBinding() {
@@ -99,14 +99,17 @@ public class ManageCustomerActivity extends BaseActivity<ActivityManageCustomerB
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (editable.toString().equalsIgnoreCase("")) {
+                searchData=editable.toString();
+                if (searchData.equalsIgnoreCase("")) {
                     DataArrayList.clear();
                     count = 1;
                     viewModel.getCustomer(String.valueOf(count), itemPerPageInProduct, "application/json", "application/json",
                             sharedPreferencesHelper.getKeyToken());
                     showProgressDialog();
                 } else {
-                    viewModel.searchCustomer(editable.toString(), "application/json", "application/json",
+                    DataArrayList.clear();
+                    count = 1;
+                    viewModel.searchCustomer(String.valueOf(count), itemPerPageInProduct,searchData, "application/json", "application/json",
                             sharedPreferencesHelper.getKeyToken());
                 }
 
@@ -160,11 +163,15 @@ public class ManageCustomerActivity extends BaseActivity<ActivityManageCustomerB
             @Override
             public void onChanged(@Nullable String error) {
                 hideProgressDialog();
+                viewBinding.idPBLoading.setVisibility(View.GONE);
                 if (error == null) {
                     //showToast(getString(R.string.something_went_wrong_please_try_again));
                 } else {
                     // showToast(error);
                 }
+                viewBinding.recyclerView.setVisibility(View.GONE);
+                viewBinding.errorImageView.setVisibility(View.VISIBLE);
+                viewBinding.errorTextView.setVisibility(View.VISIBLE);
             }
         };
         viewModel.searchUserError().observe(this, searchUserError);
@@ -173,9 +180,15 @@ public class ManageCustomerActivity extends BaseActivity<ActivityManageCustomerB
             @Override
             public void onChanged(Customer list) {
                 hideProgressDialog();
+                viewBinding.idPBLoading.setVisibility(View.GONE);
+                viewBinding.recyclerView.setVisibility(View.VISIBLE);
+                viewBinding.errorImageView.setVisibility(View.GONE);
+                viewBinding.errorTextView.setVisibility(View.GONE);
+                totalPages = list.getTotalPages();
                 customerArrayList = list.getContent();
+                DataArrayList.addAll(customerArrayList);
                 manageCustomerAdapter.clearAllItem();
-                manageCustomerAdapter.replaceArrayList(customerArrayList);
+                manageCustomerAdapter.addArrayList(DataArrayList);
             }
         };
         viewModel.searchUserSuccess().observe(this, searchUserSuccess);
@@ -266,14 +279,31 @@ public class ManageCustomerActivity extends BaseActivity<ActivityManageCustomerB
                     ++count;
                     if (count <= totalPages) {
                         viewBinding.idPBLoading.setVisibility(View.VISIBLE);
-                        viewModel.getCustomer(String.valueOf(count), itemPerPageInProduct, "application/json", "application/json",
-                                sharedPreferencesHelper.getKeyToken());
+                        if (searchData.equalsIgnoreCase("")) {
+                            viewModel.getCustomer(String.valueOf(count), itemPerPageInProduct, "application/json", "application/json",
+                                    sharedPreferencesHelper.getKeyToken());
+                        } else {
+                            viewModel.searchCustomer(String.valueOf(count), itemPerPageInProduct,searchData, "application/json", "application/json",
+                                    sharedPreferencesHelper.getKeyToken());
+                        }
+
+
                     }
 
                 }
             }
         });
 
+        viewBinding.imageMaterialCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                sharedPreferencesHelper.setCustomerName(null);
+                sharedPreferencesHelper.setCustomerCartId(null);
+                sharedPreferencesHelper.setCustomerID(null);
+                sharedPreferencesHelper.setCustomerMobileNumber(null);
+            }
+        });
     }
 
     @Override

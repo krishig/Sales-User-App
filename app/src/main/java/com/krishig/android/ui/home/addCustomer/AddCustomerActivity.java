@@ -20,6 +20,10 @@ import com.krishig.android.data.remote.helper.RetrofitClient;
 import com.krishig.android.databinding.ActivityAddCustomerBinding;
 import com.krishig.android.model.Customer;
 import com.krishig.android.model.PostalPincodeResponse;
+import com.krishig.android.model.SubCategory;
+import com.krishig.android.searchdialog.Search;
+import com.krishig.android.searchdialog.SearchUtils;
+import com.krishig.android.searchdialog.SelectListener;
 import com.krishig.android.ui.AppConstants;
 import com.krishig.android.ui.base.BaseActivity;
 import com.krishig.android.ui.home.fragments.home.viewmodel.HomeFragmentViewModel;
@@ -47,7 +51,11 @@ public class AddCustomerActivity extends BaseActivity<ActivityAddCustomerBinding
     SharedPreferencesHelper sharedPreferencesHelper;
     private ApiService postalPincodeApi;
 
-    String customerId = "", from = "",addressId = "";
+    String customerId = "", from = "", addressId = "", villageName = "";
+    String data = "";
+
+    private ArrayList<Search> vehicleTypeSearchArrayList = new ArrayList<Search>();
+    private ArrayList<PostalPincodeResponse.PostOffice> vehicleTypeArraylist = new ArrayList<>();
 
     @Override
     protected ActivityAddCustomerBinding getViewBinding() {
@@ -119,8 +127,7 @@ public class AddCustomerActivity extends BaseActivity<ActivityAddCustomerBinding
 
             @Override
             public void afterTextChanged(Editable s) {
-                String data = s.toString();
-                getSuperHeroes(data);
+                data = s.toString();
             }
         });
 
@@ -185,7 +192,11 @@ public class AddCustomerActivity extends BaseActivity<ActivityAddCustomerBinding
                     viewBinding.villageNameTextInputEditText.setText(list.getAddress().get(0).getVillageName());
                     viewBinding.pinCodeTextInputEditText.setText(list.getAddress().get(0).getPostalCode());
                     viewBinding.districtTextInputEditText.setText(list.getAddress().get(0).getDistrict());
+                    viewBinding.blockTextInputEditText.setText(list.getAddress().get(0).getBlock());
                     viewBinding.stateTextInputEditText.setText(list.getAddress().get(0).getState());
+                    if (from.equalsIgnoreCase("1")) {
+                        getSuperHeroes2(list.getAddress().get(0).getPostalCode());
+                    }
                 }
 
 
@@ -233,9 +244,10 @@ public class AddCustomerActivity extends BaseActivity<ActivityAddCustomerBinding
                 String villageName = viewBinding.villageNameTextInputEditText.getText().toString().trim();
                 String pinCode = viewBinding.pinCodeTextInputEditText.getText().toString().trim();
                 String district = viewBinding.districtTextInputEditText.getText().toString().trim();
+                String block = viewBinding.blockTextInputEditText.getText().toString().trim();
                 String state = viewBinding.stateTextInputEditText.getText().toString().trim();
                 if (validation(fullName, mobileNumber, gender, houseNumber, streetName,
-                        villageName, pinCode, district, state)) {
+                        villageName, pinCode, district, block, state)) {
                     if (from.equalsIgnoreCase("1")) {
                         try {
                             JSONObject jsonObject = new JSONObject();
@@ -250,6 +262,7 @@ public class AddCustomerActivity extends BaseActivity<ActivityAddCustomerBinding
                             jsonObject1.put("streetName", streetName);
                             jsonObject1.put("villageName", villageName);
                             jsonObject1.put("district", district);
+                            jsonObject1.put("block", block);
                             jsonObject1.put("state", state);
                             jsonObject1.put("postalCode", pinCode);
                             jsonArray.put(jsonObject1);
@@ -276,6 +289,7 @@ public class AddCustomerActivity extends BaseActivity<ActivityAddCustomerBinding
                             jsonObject1.put("streetName", streetName);
                             jsonObject1.put("villageName", villageName);
                             jsonObject1.put("district", district);
+                            jsonObject1.put("block", block);
                             jsonObject1.put("state", state);
                             jsonObject1.put("postalCode", pinCode);
                             jsonArray.put(jsonObject1);
@@ -299,6 +313,32 @@ public class AddCustomerActivity extends BaseActivity<ActivityAddCustomerBinding
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+
+        viewBinding.pinCodeInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSuperHeroes(data);
+            }
+        });
+
+
+        viewBinding.villageNameInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (vehicleTypeSearchArrayList.size() != 0) {
+                    SearchUtils.searchDialog(AddCustomerActivity.this, "Select Village Name", vehicleTypeSearchArrayList, new SelectListener() {
+                        @Override
+                        public void onSelected(Search search, int position) {
+                            viewBinding.villageNameTextInputEditText.setText(search.getItemName());
+                            villageName = search.getItemName();
+
+                            System.out.println("=====villageName=====" + villageName);
+                        }
+                    });
+                }
+
             }
         });
     }
@@ -332,7 +372,7 @@ public class AddCustomerActivity extends BaseActivity<ActivityAddCustomerBinding
     }
 
     private boolean validation(String fullName, String mobileNumber, String gender, String houseNumber,
-                               String streetName, String villageName, String pinCode, String district, String state) {
+                               String streetName, String villageName, String pinCode, String district, String block, String state) {
         boolean isValid = true;
         int phoneValidCode = ValidationUtils.isPhoneNumberValid(mobileNumber);
 
@@ -406,6 +446,14 @@ public class AddCustomerActivity extends BaseActivity<ActivityAddCustomerBinding
             viewBinding.districtInputLayout.setError("");
             viewBinding.districtInputLayout.setErrorEnabled(false);
         }
+        if (block.equalsIgnoreCase("")) {
+            viewBinding.blockInputLayout.setError("Please Enter District");
+            viewBinding.blockInputLayout.setErrorEnabled(true);
+            isValid = false;
+        } else {
+            viewBinding.blockInputLayout.setError("");
+            viewBinding.blockInputLayout.setErrorEnabled(false);
+        }
         if (state.equalsIgnoreCase("")) {
             viewBinding.stateInputLayout.setError("Please Enter State");
             viewBinding.stateInputLayout.setErrorEnabled(true);
@@ -434,8 +482,54 @@ public class AddCustomerActivity extends BaseActivity<ActivityAddCustomerBinding
 
                 if (postalPincodeResponse != null) {
                     if (postalPincodeResponse.get(0).getPostOffice() != null) {
+                        viewBinding.villageNameTextInputEditText.setText("");
                         viewBinding.districtTextInputEditText.setText(postalPincodeResponse.get(0).getPostOffice().get(0).getDistrict());
+                        viewBinding.blockTextInputEditText.setText(postalPincodeResponse.get(0).getPostOffice().get(0).getBlock());
                         viewBinding.stateTextInputEditText.setText(postalPincodeResponse.get(0).getPostOffice().get(0).getState());
+
+
+                        for (int i = 0; i < postalPincodeResponse.size(); i++) {
+                            vehicleTypeArraylist = postalPincodeResponse.get(i).getPostOffice();
+                            vehicleTypeSearchArrayList.clear();
+                            for (PostalPincodeResponse.PostOffice employees1 : vehicleTypeArraylist) {
+                                vehicleTypeSearchArrayList.add(new Search(employees1.getDistrict(), employees1.getName()));
+                            }
+                        }
+
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<PostalPincodeResponse>> call, Throwable t) {
+                // Handle network or API call failure
+                Log.e("", "onFailure  =" + call.toString());
+                Log.e("", "onFailure  =" + t);
+
+            }
+        });
+    }
+
+    private void getSuperHeroes2(String data) {
+        postalPincodeApi = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+        // Example API call
+        Call<ArrayList<PostalPincodeResponse>> call = postalPincodeApi.getPincodeDetails(data);
+        call.enqueue(new Callback<ArrayList<PostalPincodeResponse>>() {
+            @Override
+            public void onResponse(Call<ArrayList<PostalPincodeResponse>> call, Response<ArrayList<PostalPincodeResponse>> response) {
+
+                ArrayList<PostalPincodeResponse> postalPincodeResponse = response.body();
+
+                if (postalPincodeResponse != null) {
+                    if (postalPincodeResponse.get(0).getPostOffice() != null) {
+                        for (int i = 0; i < postalPincodeResponse.size(); i++) {
+                            vehicleTypeArraylist = postalPincodeResponse.get(i).getPostOffice();
+                            vehicleTypeSearchArrayList.clear();
+                            for (PostalPincodeResponse.PostOffice employees1 : vehicleTypeArraylist) {
+                                vehicleTypeSearchArrayList.add(new Search(employees1.getDistrict(), employees1.getName()));
+                            }
+                        }
                     }
                 }
             }

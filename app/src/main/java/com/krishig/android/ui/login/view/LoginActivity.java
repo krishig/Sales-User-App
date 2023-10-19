@@ -207,7 +207,7 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
                         jsonObject.put("username", userName);
                         jsonObject.put("password", password);
                         RequestBody requestBody = RequestUtils.createRequestBodyForString(jsonObject.toString());
-                        login(requestBody, "application/json", "application/json");
+                        login("Sales",requestBody, "application/json", "application/json");
                         showProgressDialog();
                         //viewModel.login(requestBody, "application/json", "application/json");
                     } catch (Exception e) {
@@ -358,9 +358,9 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
     }*/
 
 
-    private void login(RequestBody requestBody, String accept, String authorisation) {
+    private void login(String role,RequestBody requestBody, String accept, String authorisation) {
         apiService = RetrofitClient.getRetrofitInstance2().create(ApiService.class);
-        Call<ApiResponseObject<User>> call = apiService.login(requestBody, accept, authorisation);
+        Call<ApiResponseObject<User>> call = apiService.login(requestBody,role, accept, authorisation);
         call.enqueue(new Callback<ApiResponseObject<User>>() {
             @Override
             public void onResponse(Call<ApiResponseObject<User>> call, Response<ApiResponseObject<User>> response) {

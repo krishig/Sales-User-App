@@ -187,8 +187,6 @@ public class ManageOrdersFragment extends BaseFragment<FragmentManageOrdersBindi
             @Override
             public void onChanged(Order categories) {
                 hideProgressDialog();
-                //totalPagesSearch = categories.getTotalPages();
-                //viewBinding.idPBLoading.setVisibility(View.GONE);
                 viewBinding.idPBLoading.setVisibility(View.GONE);
                 if (categories != null) {
                     totalPages = categories.getTotalPages();
@@ -223,7 +221,7 @@ public class ManageOrdersFragment extends BaseFragment<FragmentManageOrdersBindi
                         viewBinding.idPBLoading.setVisibility(View.VISIBLE);
                         if (searchData.equalsIgnoreCase("")) {
                             Log.e("","scroller-------------------------------------");
-                            viewModel.getAllOrder(String.valueOf(count),itemPerPageInProduct,  "application/json", "application/json",
+                            viewModel.getAllOrder(sharedPreferencesHelper.getCustomerId(),String.valueOf(count),itemPerPageInProduct,  "application/json", "application/json",
                                     sharedPreferencesHelper.getKeyToken());
                             showProgressDialog();
                         } else {
@@ -287,7 +285,7 @@ public class ManageOrdersFragment extends BaseFragment<FragmentManageOrdersBindi
         Log.e("","resume-------------------------------------");
         DataArrayList.clear();
         count = 1;
-        viewModel.getAllOrder(String.valueOf(count),itemPerPageInProduct,  "application/json", "application/json",
+        viewModel.getAllOrder(sharedPreferencesHelper.getCustomerId(),String.valueOf(count),itemPerPageInProduct,  "application/json", "application/json",
                 sharedPreferencesHelper.getKeyToken());
         showProgressDialog();
     }

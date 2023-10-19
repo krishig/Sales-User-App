@@ -50,6 +50,7 @@ public interface ApiService {
 
     @POST(ApiConfiguration.login)
     Call<ApiResponseObject<User>> login(@Body RequestBody body,
+                                        @Query("user_role") String role,
                                         @Header("accept") String accept,
                                         @Header("Content-Type") String authorisation
     );
@@ -84,12 +85,14 @@ public interface ApiService {
     );
 
     @GET(ApiConfiguration.getAllOrder)
-    Call<ApiResponseObject<Order>> getAllOrder(@Query("pageNumber") String pageNumber,
+    Call<ApiResponseObject<Order>> getAllOrder(@Query("customerId") String customerId,
+                                               @Query("pageNumber") String pageNumber,
                                                @Query("pageSize") String pageSize,
                                                @Header("accept") String accept,
                                                @Header("Content-Type") String authorisation,
                                                @Header("Authorization") String token
     );
+
 
     @PUT(ApiConfiguration.putCustomer)
     Call<ApiResponseObject<Customer>> putCustomer(@Path("id") String customerId,
@@ -166,7 +169,9 @@ public interface ApiService {
     );
 
     @GET(ApiConfiguration.searchCustomer)
-    Call<ApiResponseObject<Customer>> searchCustomer(@Query("mobileNumber") String findByMobile,
+    Call<ApiResponseObject<Customer>> searchCustomer(@Query("pageNumber") String pageNumber,
+                                                     @Query("pageSize") String pageSize,
+                                                     @Query("mobileNumber") String findByMobile,
                                                      @Header("accept") String accept,
                                                      @Header("Content-Type") String authorisation,
                                                      @Header("Authorization") String token
@@ -288,6 +293,14 @@ public interface ApiService {
                                                            @Header("Authorization") String token
     );
 
+    @GET(ApiConfiguration.subCategorySearch)
+    Call<ApiResponseObject<SubCategory>> subCategorySearch(@Query("items_per_page") String items_per_page,
+                                                           @Query("page_number") String page_number,
+                                                           @Query("search_sub_category") String search_sub_category,
+                                                           @Header("accept") String accept,
+                                                           @Header("Content-Type") String authorisation,
+                                                           @Header("Authorization") String token
+    );
 
     @GET(ApiConfiguration.productBrandsSearch)
     Call<ApiResponseObject<ProductBrands>> subProductBrandsSearch(@Query("search_brand") String search_brand,

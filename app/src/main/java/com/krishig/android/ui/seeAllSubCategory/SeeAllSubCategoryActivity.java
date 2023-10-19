@@ -206,7 +206,7 @@ public class SeeAllSubCategoryActivity extends BaseActivity<ActivitySeeAllBindin
             public void onResponse(Call<ApiResponseObject<SubCategory>> call, Response<ApiResponseObject<SubCategory>> response) {
                 ApiResponseObject<SubCategory> categories = response.body();
                 hideProgressDialog();
-                if (categories != null) {
+                if (categories.getData() != null) {
                     viewBinding.idPBLoading.setVisibility(View.GONE);
                     int size = categories.getData().getResultArrayList().size();
                     if (size == 0) {
@@ -223,6 +223,10 @@ public class SeeAllSubCategoryActivity extends BaseActivity<ActivitySeeAllBindin
                         categoryRecyclerViewAdapter.clearAllItem();
                         categoryRecyclerViewAdapter.replaceArrayList(DataArrayList);
                     }
+                }else{
+                    viewBinding.seedsRecyclerView.setVisibility(View.GONE);
+                    viewBinding.errorImageViewSeeds.setVisibility(View.VISIBLE);
+                    viewBinding.errorTextViewSeeds.setVisibility(View.VISIBLE);
                 }
             }
 

@@ -27,8 +27,8 @@
             android:layout_centerVertical="true"
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_12sdp"
-            app:cardBackgroundColor="@color/white"
             android:layout_toStartOf="@+id/addMaterialCardView"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="@dimen/_30sdp"
             app:cardElevation="0dp"
             app:strokeColor="@color/home_grey"
@@ -113,6 +113,59 @@
 
     </RelativeLayout>
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/imageMaterialCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_12sdp"
+        app:cardBackgroundColor="@color/customer_card_color"
+        app:cardCornerRadius="@dimen/_10sdp"
+        app:cardElevation="0dp"
+        app:contentPadding="@dimen/_12sdp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:id="@+id/profileImageView"
+                android:layout_width="@dimen/_35sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_centerVertical="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/user_placeholder" />
+
+            <LinearLayout
+                android:id="@+id/relativeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/profileImageView"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/nameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0"
+                    android:text="UnSelect Customer"
+                    app:drawableEndCompat="@drawable/ic_down"
+                    app:drawableTint="@color/black"
+                    android:drawablePadding="@dimen/_12sdp"
+                    android:textAppearance="@style/BoldFont15"
+                    android:textColor="@color/black" />
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
@@ -173,6 +226,7 @@
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
     <include
         android:id="@+id/progressDialog"
         layout="@layout/please_wait_progress_bar" />

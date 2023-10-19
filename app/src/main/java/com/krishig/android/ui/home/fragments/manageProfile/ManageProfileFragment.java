@@ -1,6 +1,7 @@
 package com.krishig.android.ui.home.fragments.manageProfile;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,7 +31,9 @@ import com.krishig.android.ui.KeyboardVisibility;
 import com.krishig.android.ui.base.BaseFragment;
 import com.krishig.android.ui.home.fragments.home.viewmodel.HomeFragmentViewModel;
 import com.krishig.android.ui.home.view.HomeActivity;
+import com.krishig.android.ui.login.view.LoginActivity;
 import com.library.utilities.ValidationUtils;
+import com.library.utilities.activity.ActivityUtils;
 
 import org.json.JSONObject;
 
@@ -56,7 +59,7 @@ public class ManageProfileFragment extends BaseFragment<FragmentManageSettingBin
 
     private ApiService postalPincodeApi;
     private ApiService apiService;
-
+    String data="";
     @Override
     protected ActivityNavigator getActivityNavigator() {
         return new ActivityNavigator(getActivity());
@@ -180,8 +183,7 @@ public class ManageProfileFragment extends BaseFragment<FragmentManageSettingBin
 
             @Override
             public void afterTextChanged(Editable s) {
-                String data = s.toString();
-                getSuperHeroes(data);
+                 data = s.toString();
             }
         });
 
@@ -270,6 +272,12 @@ public class ManageProfileFragment extends BaseFragment<FragmentManageSettingBin
             }
         });
 
+        viewBinding.pinCodeInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSuperHeroes(data);
+            }
+        });
     }
 
     @Override
@@ -524,7 +532,7 @@ public class ManageProfileFragment extends BaseFragment<FragmentManageSettingBin
             public void onResponse(Call<ApiResponseObject<User>> call, Response<ApiResponseObject<User>> response) {
                 ApiResponseObject<User> categories = response.body();
                 hideProgressDialog();
-                if (categories != null) {
+                if (categories.getData() != null) {
                     viewBinding.userNameTextInputEditText.setText(categories.getData().getUsername());
                     viewBinding.fullNameTextInputEditText.setText(categories.getData().getFullname());
                     viewBinding.emailTextInputEditText.setText(categories.getData().getEmail());
@@ -535,11 +543,21 @@ public class ManageProfileFragment extends BaseFragment<FragmentManageSettingBin
                     viewBinding.houseNumberTextInputEditText.setText(categories.getData().getHouseNumber());
                     viewBinding.landMarkTextInputEditText.setText(categories.getData().getLandmark());
                     viewBinding.pinCodeTextInputEditText.setText(categories.getData().getPincode());
-                    viewBinding.districtTextInputEditText.setText(categories.getData().getDistrict());
+                    viewBinding.districtTextInputEditText.setText(categories.getData().getDistrict2());
                     viewBinding.cityTextInputEditText.setText(categories.getData().getCity());
-                    viewBinding.stateTextInputEditText.setText(categories.getData().getState());
+                    viewBinding.stateTextInputEditText.setText(categories.getData().getState2());
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, gender);
                     viewBinding.genderAppCompatAutoCompleteTextView.setAdapter(adapter);
+                }else{
+                    if(response.body().getMessage().equalsIgnoreCase("Please login again!"));{
+                        sharedPreferencesHelper.setCustomerName(null);
+                        sharedPreferencesHelper.setCustomerCartId(null);
+                        sharedPreferencesHelper.setCustomerID(null);
+                        sharedPreferencesHelper.setCustomerMobileNumber(null);
+                        sharedPreferencesHelper.setRemember(false);
+                        Intent intent = ActivityUtils.launchActivityWithClearBackStack(getActivity(), LoginActivity.class);
+                        startActivity(intent);
+                    }
                 }
             }
 

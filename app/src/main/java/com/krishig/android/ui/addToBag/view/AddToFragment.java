@@ -35,6 +35,9 @@ import com.krishig.android.model.Cart;
 import com.krishig.android.model.Customer;
 import com.krishig.android.model.PostalPincodeResponse;
 import com.krishig.android.model.Product;
+import com.krishig.android.searchdialog.Search;
+import com.krishig.android.searchdialog.SearchUtils;
+import com.krishig.android.searchdialog.SelectListener;
 import com.krishig.android.ui.AppConstants;
 import com.krishig.android.ui.KeyboardVisibility;
 import com.krishig.android.ui.Order.OrderActivity;
@@ -42,7 +45,9 @@ import com.krishig.android.ui.addToBag.adapter.AddToBagAdapter;
 import com.krishig.android.ui.addToBag.adapter.MainAdapter;
 import com.krishig.android.ui.addToBag.adapter.RadioButtonCheck;
 import com.krishig.android.ui.addToBag.adapter.deleteAddress;
+import com.krishig.android.ui.base.BaseActivity;
 import com.krishig.android.ui.base.BaseFragment;
+import com.krishig.android.ui.home.addCustomer.AddCustomerActivity;
 import com.krishig.android.ui.home.fragments.home.viewmodel.SubCategoryModel;
 import com.krishig.android.ui.home.fragments.manageProduct.view.ManageProductFragment;
 import com.krishig.android.ui.home.view.HomeActivity;
@@ -63,7 +68,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @AndroidEntryPoint
-public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements RadioButtonCheck, deleteAddress {
+public class AddToFragment extends BaseActivity<FragmentAddToBinding> implements RadioButtonCheck, deleteAddress {
 
     AddToBagAdapter addToBagAdapter;
     MainAdapter addressAdapter;
@@ -85,6 +90,7 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
     TextInputLayout villageNameInputLayout;
     TextInputLayout pinCodeInputLayout;
     TextInputLayout districtInputLayout;
+    TextInputLayout blockInputLayout;
     TextInputLayout stateInputLayout;
 
     TextInputEditText houseNumberTextInputEditText;
@@ -92,6 +98,7 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
     TextInputEditText villageNameTextInputEditText;
     TextInputEditText pinCodeTextInputEditText;
     TextInputEditText districtTextInputEditText;
+    TextInputEditText blockTextInputEditText;
     TextInputEditText stateTextInputEditText;
 
     String mobileNumber = "", customerId = "", addressId = "", totalPrice = "";
@@ -100,14 +107,17 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
 
     Dialog failedDialog;
 
+    private ArrayList<Search> vehicleTypeSearchArrayList = new ArrayList<Search>();
+    private ArrayList<PostalPincodeResponse.PostOffice> vehicleTypeArraylist = new ArrayList<>();
+
     @Override
     protected ActivityNavigator getActivityNavigator() {
-        return new ActivityNavigator(getActivity());
+        return new ActivityNavigator(AddToFragment.this);
     }
 
     @Override
     protected FragmentNavigator getFragmentNavigator() {
-        return new FragmentNavigator(getActivity().getSupportFragmentManager(), R.id.nav_host_fragment_content_main);
+        return new FragmentNavigator(AddToFragment.this.getSupportFragmentManager(), R.id.nav_host_fragment_content_main);
 
     }
 
@@ -128,10 +138,8 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
 
     @Override
     protected void initializeObject() {
-        registerKeyboardVisibilityListener(getActivity());
-
         setRecyclerView();
-        dialog = new Dialog(getContext(), R.style.MyDialogThemePhoneNumber);
+        dialog = new Dialog(this, R.style.MyDialogThemePhoneNumber);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.mobile_verification_layout);
@@ -144,6 +152,7 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
         villageNameInputLayout = dialog.findViewById(R.id.villageNameInputLayout);
         pinCodeInputLayout = dialog.findViewById(R.id.pinCodeInputLayout);
         districtInputLayout = dialog.findViewById(R.id.districtInputLayout);
+        blockInputLayout = dialog.findViewById(R.id.blockInputLayout);
         stateInputLayout = dialog.findViewById(R.id.stateInputLayout);
 
         houseNumberTextInputEditText = dialog.findViewById(R.id.houseNumberTextInputEditText);
@@ -151,9 +160,10 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
         villageNameTextInputEditText = dialog.findViewById(R.id.villageNameTextInputEditText);
         pinCodeTextInputEditText = dialog.findViewById(R.id.pinCodeTextInputEditText);
         districtTextInputEditText = dialog.findViewById(R.id.districtTextInputEditText);
+        blockTextInputEditText = dialog.findViewById(R.id.blockTextInputEditText);
         stateTextInputEditText = dialog.findViewById(R.id.stateTextInputEditText);
 
-        failedDialog = new Dialog(getContext(), R.style.MyDialogThemePhoneNumber);
+        failedDialog = new Dialog(this, R.style.MyDialogThemePhoneNumber);
         failedDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         failedDialog.setCancelable(false);
         failedDialog.setContentView(R.layout.order_failed);
@@ -161,9 +171,9 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
     }
 
     private void setRecyclerView() {
-        addToBagAdapter = new AddToBagAdapter(getContext());
+        addToBagAdapter = new AddToBagAdapter(this);
         viewBinding.recyclerView.setHasFixedSize(true);
-        viewBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        viewBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         addToBagAdapter.addArrayList(cartArrayList);
         viewBinding.recyclerView.setAdapter(addToBagAdapter);
     }
@@ -171,7 +181,7 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
     private void setRecyclerViewAddress() {
         addressAdapter = new MainAdapter(addressArraylist, this, this);
         viewBinding.recyclerViewAddress.setHasFixedSize(true);
-        viewBinding.recyclerViewAddress.setLayoutManager(new LinearLayoutManager(getContext()));
+        viewBinding.recyclerViewAddress.setLayoutManager(new LinearLayoutManager(this));
         viewBinding.recyclerViewAddress.setAdapter(addressAdapter);
     }
 
@@ -368,7 +378,7 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
             @Override
             public void onChanged(Cart cart) {
                 hideProgressDialog();
-                Intent intent = ActivityUtils.launchActivityWithClearBackStack(getActivity(), OrderActivity.class);
+                Intent intent = ActivityUtils.launchActivityWithClearBackStack(AddToFragment.this, OrderActivity.class);
                 intent.putExtra(AppConstants.Extras.ORDER_ID, cart.getOrderId());
                 startActivity(intent);
             }
@@ -484,7 +494,7 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
             public void OnItemChildClick(View viewChild, Customer.Address address, int position) {
                 switch (viewChild.getId()) {
                     case R.id.imageDelete:
-                        alertDialogConfirmExit(getActivity(), address.getId());
+                        alertDialogConfirmExit(AddToFragment.this, address.getId());
                         break;
                     default:
                         break;
@@ -502,6 +512,12 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
             }
         });
 
+        viewBinding.icBackImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -518,7 +534,7 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
     public void showProgressDialog() {
         if (viewBinding.progressDialog.pleaseWaitProgressBar.getVisibility() == View.GONE) {
             viewBinding.progressDialog.pleaseWaitProgressBar.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            AddToFragment.this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
 
     }
@@ -527,7 +543,7 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
     public void hideProgressDialog() {
         if (viewBinding.progressDialog.pleaseWaitProgressBar.getVisibility() == View.VISIBLE) {
             viewBinding.progressDialog.pleaseWaitProgressBar.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            AddToFragment.this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
     }
 
@@ -537,6 +553,7 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
         villageNameTextInputEditText.setText("");
         pinCodeTextInputEditText.setText("");
         districtTextInputEditText.setText("");
+        blockTextInputEditText.setText("");
         stateTextInputEditText.setText("");
         pinCodeInputLayout.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
@@ -570,6 +587,22 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
             }
         });
 
+        villageNameInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (vehicleTypeSearchArrayList.size() != 0) {
+                    SearchUtils.searchDialog(AddToFragment.this, "Select Village Name", vehicleTypeSearchArrayList, new SelectListener() {
+                        @Override
+                        public void onSelected(Search search, int position) {
+                            villageNameTextInputEditText.setText(search.getItemName());
+                        }
+                    });
+                }
+
+            }
+        });
+
+
         materialButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -578,8 +611,9 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
                 String villageName = villageNameTextInputEditText.getText().toString().trim();
                 String pinCode = pinCodeTextInputEditText.getText().toString().trim();
                 String district = districtTextInputEditText.getText().toString().trim();
+                String block = blockTextInputEditText.getText().toString().trim();
                 String state = stateTextInputEditText.getText().toString().trim();
-                if (loginRegisterValidation(houseNumber, streetName, villageName, pinCode, district, state)) {
+                if (loginRegisterValidation(houseNumber, streetName, villageName, pinCode, district,block, state)) {
                     try {
                         JSONObject jsonObject = new JSONObject();
                         JSONObject jsonObject1 = new JSONObject();
@@ -587,6 +621,7 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
                         jsonObject.put("streetName", streetName);
                         jsonObject.put("villageName", villageName);
                         jsonObject.put("district", district);
+                        jsonObject.put("block", block);
                         jsonObject.put("state", state);
                         jsonObject.put("postalCode", pinCode);
                         jsonObject.put("customer", jsonObject1);
@@ -662,7 +697,20 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
                 if (postalPincodeResponse != null) {
                     if (postalPincodeResponse.get(0).getPostOffice() != null) {
                         districtTextInputEditText.setText(postalPincodeResponse.get(0).getPostOffice().get(0).getDistrict());
+                        blockTextInputEditText.setText(postalPincodeResponse.get(0).getPostOffice().get(0).getBlock());
                         stateTextInputEditText.setText(postalPincodeResponse.get(0).getPostOffice().get(0).getState());
+                        villageNameTextInputEditText.setText("");
+
+
+                        for (int i = 0; i < postalPincodeResponse.size(); i++) {
+                            vehicleTypeArraylist = postalPincodeResponse.get(i).getPostOffice();
+                            vehicleTypeSearchArrayList.clear();
+                            for (PostalPincodeResponse.PostOffice employees1 : vehicleTypeArraylist) {
+                                vehicleTypeSearchArrayList.add(new Search(employees1.getDistrict(), employees1.getName()));
+                            }
+                        }
+
+
                     }
                 }
             }
@@ -679,7 +727,7 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
 
 
     private boolean loginRegisterValidation(String houseNumber, String streetName, String villageName,
-                                            String pinCode, String district, String state) {
+                                            String pinCode, String district,String block, String state) {
         boolean isValid = true;
 
         if (houseNumber.equalsIgnoreCase("")) {
@@ -705,6 +753,12 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
             isValid = false;
         } else {
             pinCodeInputLayout.setError("");
+        }
+        if (block.equalsIgnoreCase("")) {
+            blockInputLayout.setError("Please Enter Block");
+            isValid = false;
+        } else {
+            blockInputLayout.setError("");
         }
         if (district.equalsIgnoreCase("")) {
             districtInputLayout.setError("Please Enter District");
@@ -812,30 +866,8 @@ public class AddToFragment extends BaseFragment<FragmentAddToBinding> implements
 
     @Override
     public void check(String id) {
-        alertDialogConfirmExit(getActivity(), id);
+        alertDialogConfirmExit(AddToFragment.this, id);
     }
 
-    public void registerKeyboardVisibilityListener(Activity activity) {
-        unRegisterKeyboardVisibilityListener();
-        KeyboardVisibility.addKeyboardToggleListener(activity, new KeyboardVisibility.SoftKeyboardToggleListener() {
-            @Override
-            public void onToggleSoftKeyboard(boolean isVisible) {
-                if (isVisible) {
-                    if (getActivity() instanceof HomeActivity) {
-                        HomeActivity leftNavDrawerActivity = (HomeActivity) getActivity();
-                        leftNavDrawerActivity.hideBottomNavigation();
-                    }
-                } else {
-                    if (getActivity() instanceof HomeActivity) {
-                        HomeActivity leftNavDrawerActivity = (HomeActivity) getActivity();
-                        leftNavDrawerActivity.showBottomNavigation();
-                    }
-                }
-            }
-        });
-    }
 
-    public void unRegisterKeyboardVisibilityListener() {
-        KeyboardVisibility.removeAllKeyboardToggleListeners();
-    }
 }
